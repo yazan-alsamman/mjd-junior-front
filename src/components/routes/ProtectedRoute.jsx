@@ -1,0 +1,24 @@
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
+export default function ProtectedRoute({ children }) {
+  const { isAuthenticated, isBootstrapping } = useAuth();
+  const location = useLocation();
+
+  if (isBootstrapping) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-ink-50 text-ink-700">
+        <div className="flex items-center gap-2 rounded-xl border border-ink-200 bg-white px-4 py-3 shadow-sm">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-brand-500" />
+          Loading secure workspace...
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  return children;
+}

@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Inter", "Segoe UI", sans-serif;
+
+  --color-ink-50: #f7f9fc;
+  --color-ink-100: #edf2f7;
+  --color-ink-200: #d9e2ec;
+  --color-ink-300: #bcccdc;
+  --color-ink-400: #9fb3c8;
+  --color-ink-500: #829ab1;
+  --color-ink-600: #627d98;
+  --color-ink-700: #486581;
+  --color-ink-800: #334e68;
+  --color-ink-900: #102a43;
+  --color-ink-950: #0b1f33;
+
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #d9e8ff;
+  --color-brand-200: #b8d2ff;
+  --color-brand-300: #8eb5ff;
+  --color-brand-400: #5f8fff;
+  --color-brand-500: #3b6df5;
+  --color-brand-600: #2454db;
+  --color-brand-700: #1d45b5;
+  --color-brand-800: #1d3c91;
+  --color-brand-900: #1d3572;
+
+  --color-analysis-50: #eefcf8;
+  --color-analysis-100: #d5f5eb;
+  --color-analysis-200: #b0ebdb;
+  --color-analysis-300: #7bdbc5;
+  --color-analysis-400: #46c4a7;
+  --color-analysis-500: #25aa8e;
+  --color-analysis-600: #148774;
+  --color-analysis-700: #136b5d;
+  --color-analysis-800: #14554b;
+  --color-analysis-900: #13463f;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-display);
+  background-color: var(--color-ink-50);
+  color: var(--color-ink-900);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
