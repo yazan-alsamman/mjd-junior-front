@@ -4,6 +4,8 @@
 
 @theme {
   --font-display: "Inter", "Segoe UI", sans-serif;
+  --font-syne: "Syne", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   --color-ink-50: #f7f9fc;
   --color-ink-100: #edf2f7;

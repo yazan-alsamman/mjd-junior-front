@@ -12,7 +12,10 @@ import { Link } from 'react-router-dom';
 import { checkLogo } from '../api/logoApi';
 import ThemeToggle from '../components/common/ThemeToggle';
 import AnalysisResultCard from '../components/logo/AnalysisResultCard';
+import FuturisticPageShell from '../components/shell/FuturisticPageShell';
+import FuturisticTopBar from '../components/shell/FuturisticTopBar';
 import { formatFileSize } from '../lib/formatters';
+import { fx } from '../lib/futureUi';
 import { validateImageFile } from '../lib/validation';
 
 export default function CheckLogoPage() {
@@ -110,54 +113,48 @@ export default function CheckLogoPage() {
   };
 
   return (
-    <main className="min-h-screen bg-ink-50 px-4 py-6 text-ink-900 transition-colors sm:px-8 sm:py-10 dark:bg-slate-950 dark:text-white">
-      <div className="mx-auto max-w-6xl animate-[fadeInUp_.45s_ease]">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 rounded-xl border border-ink-200 bg-white px-4 py-2.5 text-sm font-semibold text-ink-700 transition hover:bg-ink-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to homepage
+    <FuturisticPageShell>
+      <FuturisticTopBar
+        start={
+          <Link to="/" className={fx.btnGhost}>
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+            Home
           </Link>
+        }
+        end={
+          <>
+            <ThemeToggle />
+            <Link to="/history" className={fx.btnOutline}>
+              History
+            </Link>
+          </>
+        }
+      />
 
-          <ThemeToggle />
-        </div>
+      <div className={`${fx.containerWide} ${fx.mainTop} px-4 sm:px-6`}>
+        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <section className={fx.card}>
+            <p className={fx.kicker}>Product logo check</p>
 
-        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <section className="rounded-3xl border border-ink-200 bg-white p-6 shadow-sm shadow-ink-950/5 dark:border-slate-800 dark:bg-slate-900 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-500 dark:text-slate-400">
-              Product Logo Check
+            <h1 className={fx.titleHero}>Upload a product image and inspect the visible logo</h1>
+
+            <p className={`mt-4 max-w-2xl ${fx.body}`}>
+              This flow is for individual users. Upload a product image and the system will inspect the visible logo to
+              detect whether it appears authentic, suspicious, or counterfeit.
             </p>
 
-            <h1 className="mt-2 font-display text-3xl font-semibold text-ink-950 dark:text-white">
-              Upload a product image and inspect the visible logo
-            </h1>
-
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-600 dark:text-slate-300">
-              This page is designed for individual users. Upload a product image, and the
-              system will inspect the visible logo to detect whether it appears authentic,
-              suspicious, or counterfeit.
-            </p>
-
-            <div className="mt-5 rounded-2xl border border-brand-100 bg-brand-50/70 p-4 dark:border-brand-800 dark:bg-slate-950">
-              <p className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900 dark:text-white">
-                <ShieldCheck className="h-4 w-4 text-brand-600" />
+            <div className="mt-6 rounded-2xl border border-cyan-500/20 bg-cyan-500/[0.06] p-4">
+              <p className="inline-flex items-center gap-2 text-sm font-semibold text-white">
+                <ShieldCheck className="h-4 w-4 text-cyan-400" aria-hidden />
                 Supported brands
               </p>
-              <p className="mt-2 text-sm text-ink-600 dark:text-slate-300">
-                Adidas, Nike, Puma, Zara, Gucci
-              </p>
+              <p className="mt-2 text-sm text-zinc-400">Adidas, Nike, Puma, Zara, Gucci</p>
             </div>
 
-            <label className="mt-6 flex min-h-64 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-brand-200 bg-brand-50/40 px-5 text-center transition hover:border-brand-300 hover:bg-brand-50/70 dark:border-brand-700 dark:bg-slate-950">
-              <UploadCloud className="h-8 w-8 text-brand-600" />
-              <span className="mt-3 text-base font-semibold text-ink-900 dark:text-white">
-                Drop product image here or click to browse
-              </span>
-              <span className="mt-2 text-sm text-ink-600 dark:text-slate-300">
-                Supported formats: SVG, PNG, JPG — up to 10MB
-              </span>
+            <label className={`mt-6 ${fx.dropzone}`}>
+              <UploadCloud className="h-8 w-8 text-cyan-400" aria-hidden />
+              <span className="mt-3 text-base font-semibold text-white">Drop product image here or click to browse</span>
+              <span className="mt-2 text-sm text-zinc-500">Supported formats: SVG, PNG, JPG — up to 10MB</span>
               <input
                 type="file"
                 accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml"
@@ -167,35 +164,25 @@ export default function CheckLogoPage() {
             </label>
 
             {error && (
-              <div className="mt-4 flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              <div className={`mt-4 flex items-start gap-3 ${fx.alertError}`}>
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
-            {successMessage && (
-              <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
-                {successMessage}
-              </div>
-            )}
+            {successMessage && <div className={`mt-4 ${fx.alertSuccess}`}>{successMessage}</div>}
 
             {fileDetails && (
-              <div className="mt-5 rounded-2xl border border-ink-200 bg-ink-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+              <div className={`mt-5 ${fx.panel} p-4`}>
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-semibold text-ink-900 dark:text-white">
-                      {fileDetails.name}
-                    </p>
-                    <p className="mt-1 text-sm text-ink-600 dark:text-slate-300">
+                    <p className="text-sm font-semibold text-white">{fileDetails.name}</p>
+                    <p className="mt-1 text-sm text-zinc-500">
                       {fileDetails.type} • {fileDetails.size}
                     </p>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleRemoveFile}
-                    className="inline-flex items-center gap-2 rounded-xl border border-ink-200 bg-white px-3 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
-                  >
+                  <button type="button" onClick={handleRemoveFile} className={fx.btnDangerGhost}>
                     <X className="h-4 w-4" />
                     Remove
                   </button>
@@ -208,40 +195,32 @@ export default function CheckLogoPage() {
                 type="button"
                 onClick={handleAnalyze}
                 disabled={isAnalyzing || !selectedFile}
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-70"
+                className={fx.btnPrimary}
               >
                 <ScanSearch className="h-4 w-4" />
                 {isAnalyzing ? 'Analyzing...' : 'Analyze Logo'}
               </button>
 
-              <Link
-                to="/history"
-                className="inline-flex items-center gap-2 rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm font-semibold text-ink-700 transition hover:bg-ink-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
-              >
+              <Link to="/history" className={fx.btnGhost}>
                 View History
               </Link>
 
               {result?.id && (
-                <Link
-                  to={`/history/${result.id}`}
-                  className="inline-flex items-center gap-2 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-700 transition hover:bg-brand-100 dark:border-brand-700 dark:bg-slate-950 dark:text-brand-300"
-                >
+                <Link to={`/history/${result.id}`} className={fx.btnOutline}>
                   Open Details
                 </Link>
               )}
             </div>
           </section>
 
-          <section className="rounded-3xl border border-ink-200 bg-white p-6 shadow-sm shadow-ink-950/5 dark:border-slate-800 dark:bg-slate-900 sm:p-8">
-            <h2 className="font-display text-2xl font-semibold text-ink-950 dark:text-white">
-              Preview & Result
-            </h2>
-            <p className="mt-2 text-sm text-ink-600 dark:text-slate-300">
+          <section className={fx.card}>
+            <h2 className={fx.titleMd}>Preview &amp; result</h2>
+            <p className={`mt-2 ${fx.body}`}>
               Your uploaded product image and the authenticity result will appear here.
             </p>
 
-            <div className="mt-6 rounded-2xl border border-ink-200 bg-ink-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-              <div className="flex min-h-72 items-center justify-center overflow-hidden rounded-2xl border border-dashed border-ink-300 bg-white dark:border-slate-700 dark:bg-slate-900">
+            <div className={`mt-6 ${fx.panel} p-4`}>
+              <div className="flex min-h-72 items-center justify-center overflow-hidden rounded-2xl border border-dashed border-white/15 bg-black/40">
                 {previewUrl ? (
                   <img
                     src={previewUrl}
@@ -249,24 +228,23 @@ export default function CheckLogoPage() {
                     className="max-h-64 w-auto object-contain"
                   />
                 ) : (
-                  <div className="text-center text-ink-500 dark:text-slate-400">
-                    <ImageIcon className="mx-auto h-8 w-8" />
-                    <p className="mt-3 text-sm font-medium">No product image selected yet</p>
+                  <div className="text-center text-zinc-500">
+                    <ImageIcon className="mx-auto h-8 w-8 text-zinc-600" />
+                    <p className="mt-3 text-sm font-medium text-zinc-400">No product image selected yet</p>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="mt-6 rounded-2xl border border-ink-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+            <div className={`mt-6 ${fx.panel} p-5`}>
               {!result && !isAnalyzing && (
-                <div className="rounded-xl border border-dashed border-ink-300 p-4 text-sm text-ink-600 dark:border-slate-700 dark:text-slate-300">
-                  Run an analysis to see the final verdict, confidence score, detected brand,
-                  and notes.
+                <div className="rounded-xl border border-dashed border-white/15 p-4 text-sm text-zinc-500">
+                  Run an analysis to see the final verdict, confidence score, detected brand, and notes.
                 </div>
               )}
 
               {isAnalyzing && (
-                <div className="rounded-xl border border-brand-100 bg-brand-50 p-4 text-sm text-brand-800 dark:border-brand-800 dark:bg-slate-950 dark:text-brand-300">
+                <div className="rounded-xl border border-cyan-500/25 bg-cyan-950/25 p-4 text-sm text-cyan-100">
                   We are analyzing the uploaded image now...
                 </div>
               )}
@@ -276,6 +254,6 @@ export default function CheckLogoPage() {
           </section>
         </div>
       </div>
-    </main>
+    </FuturisticPageShell>
   );
 }

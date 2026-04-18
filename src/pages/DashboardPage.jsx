@@ -20,8 +20,8 @@ import {
 } from '../api/companyApi';
 import RecentAnalysesTable from '../components/dashboard/RecentAnalysesTable';
 import AnalyticsOverview from '../components/dashboard/AnalyticsOverview';
-import ThemeToggle from '../components/common/ThemeToggle';
 import { formatCompactNumber } from '../lib/formatters';
+import { fx } from '../lib/futureUi';
 import {
   violationDefaultValues,
   violationSchema,
@@ -55,6 +55,9 @@ const emptyDashboard = {
   },
   recentAnalyses: [],
 };
+
+const fieldClass = `${fx.input}`;
+const errText = 'mt-1 text-xs text-rose-300';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -159,113 +162,85 @@ export default function DashboardPage() {
       <div className="space-y-6 animate-[fadeInUp_.5s_ease]">
         <header className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-500 dark:text-slate-400">
-              Company Workspace
-            </p>
-            <h1 className="mt-2 font-display text-3xl font-semibold text-ink-950 dark:text-white">
-              Brand Protection Dashboard
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm text-ink-600 dark:text-slate-300">
-              Manage authentic logo assets, review suspicious detections, and report
-              counterfeit activity from digital channels.
+            <p className={fx.kicker}>Company workspace</p>
+            <h1 className={`mt-2 ${fx.titleHero}`}>Brand protection dashboard</h1>
+            <p className="mt-2 max-w-2xl text-sm text-zinc-400">
+              Manage authentic logo assets, review suspicious detections, and report counterfeit activity from digital
+              channels.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <ThemeToggle />
-            <button
-              type="button"
-              onClick={loadDashboard}
-              className="inline-flex items-center gap-2 rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm font-semibold text-ink-700 transition hover:bg-ink-100 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
-            >
-              Refresh Data
-            </button>
-          </div>
+          <button type="button" onClick={loadDashboard} className={fx.btnGhost}>
+            Refresh data
+          </button>
         </header>
 
-        <section
-          id="overview"
-          className="rounded-3xl border border-brand-100 bg-gradient-to-r from-brand-700 via-brand-600 to-analysis-600 p-6 text-white shadow-lg shadow-brand-900/20 sm:p-7"
-        >
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-100">
+        <section id="overview" className={fx.dashHero}>
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-200/80">
             Welcome back
           </p>
-          <h2 className="mt-2 font-display text-2xl font-semibold sm:text-3xl">
+          <h2 className="mt-2 font-syne text-2xl font-bold text-white sm:text-3xl">
             {user?.name}, your brand integrity workspace is ready
           </h2>
-          <p className="mt-2 max-w-2xl text-sm text-brand-100">
-            Review suspicious activity, upload authentic references, and track incoming
-            logo-related reports from users and monitored channels.
+          <p className="mt-2 max-w-2xl text-sm text-zinc-300">
+            Review suspicious activity, upload authentic references, and track incoming logo-related reports from users
+            and monitored channels.
           </p>
 
           <div className="mt-5 flex flex-wrap gap-3">
-            <a
-              href="#recent-analyses"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-brand-700 transition hover:bg-brand-50"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              Review Detections
+            <a href="#recent-analyses" className={fx.btnSolid}>
+              <ShieldCheck className="h-4 w-4 text-brand-700" />
+              Review detections
             </a>
 
-            <a
-              href="#violations"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15"
-            >
-              Report New Violation
+            <a href="#violations" className={fx.btnOutline}>
+              Report new violation
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
         </section>
 
-        {dashboardError && (
-          <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-            {dashboardError}
-          </div>
-        )}
+        {dashboardError && <div className={fx.alertError}>{dashboardError}</div>}
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-ink-200 bg-white p-5 shadow-sm shadow-ink-950/5 dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm text-ink-500 dark:text-slate-400">Total analyses</p>
-            <p className="mt-2 text-3xl font-semibold text-ink-950 dark:text-white">
+          <div className={fx.statCard}>
+            <p className="text-sm text-zinc-500">Total analyses</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-white">
               {dashboardLoading ? '—' : formatCompactNumber(stats.totalAnalyses)}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-ink-200 bg-white p-5 shadow-sm shadow-ink-950/5 dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm text-ink-500 dark:text-slate-400">Authentic detections</p>
-            <p className="mt-2 text-3xl font-semibold text-emerald-700">
+          <div className={fx.statCard}>
+            <p className="text-sm text-zinc-500">Authentic detections</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-emerald-300">
               {dashboardLoading ? '—' : formatCompactNumber(stats.authenticCount)}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-ink-200 bg-white p-5 shadow-sm shadow-ink-950/5 dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm text-ink-500 dark:text-slate-400">Suspicious cases</p>
-            <p className="mt-2 text-3xl font-semibold text-amber-700">
+          <div className={fx.statCard}>
+            <p className="text-sm text-zinc-500">Suspicious cases</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-amber-300">
               {dashboardLoading ? '—' : formatCompactNumber(stats.suspiciousCount)}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-ink-200 bg-white p-5 shadow-sm shadow-ink-950/5 dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm text-ink-500 dark:text-slate-400">Reported violations</p>
-            <p className="mt-2 text-3xl font-semibold text-rose-700">
+          <div className={fx.statCard}>
+            <p className="text-sm text-zinc-500">Reported violations</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-rose-300">
               {dashboardLoading ? '—' : formatCompactNumber(stats.violationReports)}
             </p>
           </div>
         </section>
 
         <section id="recent-analyses" className="grid gap-5 xl:grid-cols-[1.35fr_0.65fr]">
-          <article className="rounded-2xl border border-ink-200 bg-white shadow-sm shadow-ink-950/5 dark:border-slate-800 dark:bg-slate-900">
-            <header className="flex items-center justify-between border-b border-ink-200 px-5 py-4 dark:border-slate-800">
-              <h3 className="font-display text-lg font-semibold text-ink-950 dark:text-white">
-                Recent Logo Analyses
-              </h3>
-              <span className="text-sm text-ink-500 dark:text-slate-400">Company view</span>
+          <article className="overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.03] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-xl">
+            <header className="flex items-center justify-between border-b border-white/[0.08] px-5 py-4">
+              <h3 className="font-syne text-lg font-semibold text-white">Recent logo analyses</h3>
+              <span className="font-mono text-xs uppercase tracking-wider text-zinc-500">Company view</span>
             </header>
 
             {dashboardLoading ? (
-              <div className="px-5 py-6 text-sm text-ink-500 dark:text-slate-400">
-                Loading recent analyses...
-              </div>
+              <div className="px-5 py-6 text-sm text-zinc-500">Loading recent analyses...</div>
             ) : (
               <RecentAnalysesTable items={dashboard.recentAnalyses} />
             )}
@@ -274,66 +249,43 @@ export default function DashboardPage() {
           <article className="space-y-5">
             <AnalyticsOverview stats={stats} />
 
-            <div className="rounded-2xl border border-dashed border-ink-300 bg-white p-5 text-center shadow-sm shadow-ink-950/5 dark:border-slate-700 dark:bg-slate-900">
-              <Building2 className="mx-auto h-6 w-6 text-ink-400 dark:text-slate-500" />
-              <h4 className="mt-3 text-sm font-semibold text-ink-900 dark:text-white">
-                Brand asset library ready for backend storage
-              </h4>
-              <p className="mt-1 text-sm text-ink-600 dark:text-slate-300">
-                The frontend upload flow is complete. The backend only needs to accept
-                multipart logo files and persist them.
+            <div className={`${fx.cardTight} border-dashed border-cyan-500/20 text-center`}>
+              <Building2 className="mx-auto h-6 w-6 text-cyan-500/60" />
+              <h4 className="mt-3 text-sm font-semibold text-white">Brand asset library ready for backend storage</h4>
+              <p className="mt-1 text-sm text-zinc-500">
+                The frontend upload flow is complete. The backend only needs to accept multipart logo files and persist
+                them.
               </p>
             </div>
           </article>
         </section>
 
         <section className="grid gap-5 lg:grid-cols-2">
-          <article
-            id="logo-uploads"
-            className="rounded-2xl border border-ink-200 bg-white p-5 shadow-sm shadow-ink-950/5 dark:border-slate-800 dark:bg-slate-900"
-          >
-            <h3 className="font-display text-lg font-semibold text-ink-950 dark:text-white">
-              Upload Authentic Logos
-            </h3>
-            <p className="mt-2 text-sm text-ink-600 dark:text-slate-300">
-              Upload original company logos to enrich comparison rules and support
-              verification.
+          <article id="logo-uploads" className={fx.card}>
+            <h3 className={fx.titleMd}>Upload authentic logos</h3>
+            <p className={`mt-2 ${fx.body}`}>
+              Upload original company logos to enrich comparison rules and support verification.
             </p>
 
-            <label className="mt-4 flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-brand-200 bg-brand-50/35 px-4 text-center transition hover:border-brand-300 hover:bg-brand-50/65 dark:border-brand-700 dark:bg-slate-950">
-              <UploadCloud className="h-6 w-6 text-brand-600" />
-              <span className="mt-3 text-sm font-semibold text-ink-900 dark:text-white">
-                {uploadStatus.loading
-                  ? 'Uploading...'
-                  : 'Drop authentic logo files or click to upload'}
+            <label
+              className={`mt-4 flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-cyan-500/25 bg-cyan-500/[0.06] px-4 text-center transition hover:border-fuchsia-400/30 hover:bg-fuchsia-500/[0.06]`}
+            >
+              <UploadCloud className="h-6 w-6 text-cyan-400" />
+              <span className="mt-3 text-sm font-semibold text-white">
+                {uploadStatus.loading ? 'Uploading...' : 'Drop authentic logo files or click to upload'}
               </span>
-              <span className="mt-1 text-sm text-ink-600 dark:text-slate-300">
-                SVG, PNG, JPG supported
-              </span>
+              <span className="mt-1 text-sm text-zinc-500">SVG, PNG, JPG supported</span>
               <input type="file" multiple className="sr-only" onChange={handleLogoUpload} />
             </label>
 
-            {uploadStatus.success && (
-              <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
-                {uploadStatus.success}
-              </div>
-            )}
+            {uploadStatus.success && <div className={`mt-4 ${fx.alertSuccess}`}>{uploadStatus.success}</div>}
 
-            {uploadStatus.error && (
-              <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
-                {uploadStatus.error}
-              </div>
-            )}
+            {uploadStatus.error && <div className={`mt-4 ${fx.alertError}`}>{uploadStatus.error}</div>}
           </article>
 
-          <article
-            id="violations"
-            className="rounded-2xl border border-ink-200 bg-white p-5 shadow-sm shadow-ink-950/5 dark:border-slate-800 dark:bg-slate-900"
-          >
-            <h3 className="font-display text-lg font-semibold text-ink-950 dark:text-white">
-              Report a Violation
-            </h3>
-            <p className="mt-2 text-sm text-ink-600 dark:text-slate-300">
+          <article id="violations" className={fx.card}>
+            <h3 className={fx.titleMd}>Report a violation</h3>
+            <p className={`mt-2 ${fx.body}`}>
               Log a suspicious or fake logo finding and record its source for follow-up.
             </p>
 
@@ -342,104 +294,67 @@ export default function DashboardPage() {
                 <input
                   {...register('brand')}
                   placeholder="Brand (Nike, Adidas...)"
-                  className="w-full rounded-xl border border-ink-200 px-3 py-2 text-sm outline-none transition focus:border-brand-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                  className={fieldClass}
                 />
-                {errors.brand && (
-                  <p className="mt-1 text-xs text-rose-600">{errors.brand.message}</p>
-                )}
+                {errors.brand && <p className={errText}>{errors.brand.message}</p>}
               </div>
 
               <div>
-                <select
-                  {...register('source')}
-                  className="w-full rounded-xl border border-ink-200 px-3 py-2 text-sm outline-none transition focus:border-brand-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
-                >
+                <select {...register('source')} className={fieldClass}>
                   <option value="website">Website</option>
                   <option value="social">Social Media</option>
                   <option value="marketplace">Marketplace</option>
                   <option value="other">Other</option>
                 </select>
-                {errors.source && (
-                  <p className="mt-1 text-xs text-rose-600">{errors.source.message}</p>
-                )}
+                {errors.source && <p className={errText}>{errors.source.message}</p>}
               </div>
 
               <div>
-                <input
-                  {...register('url')}
-                  placeholder="Source URL"
-                  className="w-full rounded-xl border border-ink-200 px-3 py-2 text-sm outline-none transition focus:border-brand-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
-                />
-                {errors.url && (
-                  <p className="mt-1 text-xs text-rose-600">{errors.url.message}</p>
-                )}
+                <input {...register('url')} placeholder="Source URL" className={fieldClass} />
+                {errors.url && <p className={errText}>{errors.url.message}</p>}
               </div>
 
               <div>
                 <textarea
                   {...register('notes')}
                   placeholder="Additional notes"
-                  rows="4"
-                  className="w-full rounded-xl border border-ink-200 px-3 py-2 text-sm outline-none transition focus:border-brand-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                  rows={4}
+                  className={`${fieldClass} ${fx.textarea}`}
                 />
-                {errors.notes && (
-                  <p className="mt-1 text-xs text-rose-600">{errors.notes.message}</p>
-                )}
+                {errors.notes && <p className={errText}>{errors.notes.message}</p>}
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit Report'}
+              <button type="submit" disabled={isSubmitting} className={`w-full ${fx.btnPrimary}`}>
+                {isSubmitting ? 'Submitting...' : 'Submit report'}
               </button>
             </form>
 
-            {reportFeedback.success && (
-              <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
-                {reportFeedback.success}
-              </div>
-            )}
+            {reportFeedback.success && <div className={`mt-4 ${fx.alertSuccess}`}>{reportFeedback.success}</div>}
 
-            {reportFeedback.error && (
-              <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
-                {reportFeedback.error}
-              </div>
-            )}
+            {reportFeedback.error && <div className={`mt-4 ${fx.alertError}`}>{reportFeedback.error}</div>}
 
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
               {sources.map((source) => {
                 const Icon = source.icon;
 
                 return (
-                  <div
-                    key={source.title}
-                    className="rounded-xl border border-ink-200 bg-ink-50 p-4 dark:border-slate-800 dark:bg-slate-950"
-                  >
-                    <Icon className="h-5 w-5 text-brand-600" />
-                    <p className="mt-3 text-sm font-semibold text-ink-900 dark:text-white">
-                      {source.title}
-                    </p>
-                    <p className="mt-1 text-sm text-ink-600 dark:text-slate-300">
-                      {source.description}
-                    </p>
+                  <div key={source.title} className={`${fx.panel} p-4`}>
+                    <Icon className="h-5 w-5 text-cyan-400" />
+                    <p className="mt-3 text-sm font-semibold text-white">{source.title}</p>
+                    <p className="mt-1 text-sm text-zinc-500">{source.description}</p>
                   </div>
                 );
               })}
             </div>
 
-            <div
-              id="settings"
-              className="mt-4 rounded-xl border border-dashed border-ink-300 p-4 dark:border-slate-700"
-            >
-              <p className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900 dark:text-white">
-                <BadgeCheck className="h-4 w-4 text-emerald-600" />
+            <div id="settings" className={`mt-4 rounded-xl border border-dashed border-white/15 p-4`}>
+              <p className="inline-flex items-center gap-2 text-sm font-semibold text-white">
+                <BadgeCheck className="h-4 w-4 text-emerald-400" />
                 Backend-ready contract
               </p>
-              <p className="mt-1 text-sm text-ink-600 dark:text-slate-300">
-                This dashboard already expects live stats, recent analyses, logo uploads, and
-                violation submission from the backend API.
+              <p className="mt-1 text-sm text-zinc-500">
+                This dashboard already expects live stats, recent analyses, logo uploads, and violation submission from
+                the backend API.
               </p>
             </div>
           </article>
