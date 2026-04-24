@@ -54,16 +54,35 @@ const emptyDashboard = {
     violationReports: 0,
   },
   recentAnalyses: [],
+  referenceLogos: [],
+  recentReports: [],
 };
 
 const fieldClass = `${fx.input}`;
 const errText = 'mt-1 text-xs text-rose-300';
+
+function buildReportPayload(values) {
+  const normalizedSource = String(values.source || 'other').toUpperCase();
+
+  return {
+    analysisId: null,
+    reportType: normalizedSource,
+    description: [
+      values.brand ? `Brand: ${values.brand}` : '',
+      values.url ? `URL: ${values.url}` : '',
+      values.notes ? `Notes: ${values.notes}` : '',
+    ]
+      .filter(Boolean)
+      .join(' | '),
+  };
+}
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const [dashboard, setDashboard] = useState(emptyDashboard);
   const [dashboardLoading, setDashboardLoading] = useState(true);
   const [dashboardError, setDashboardError] = useState('');
+  const [logoBrandName, setLogoBrandName] = useState('');
   const [uploadStatus, setUploadStatus] = useState({
     loading: false,
     success: '',
@@ -105,8 +124,19 @@ export default function DashboardPage() {
 
   const handleLogoUpload = async (event) => {
     const files = event.target.files;
+    const file = files?.[0];
 
-    if (!files || files.length === 0) {
+    if (!file) {
+      return;
+    }
+
+    if (!logoBrandName.trim()) {
+      setUploadStatus({
+        loading: false,
+        success: '',
+        error: 'Please enter a brand name before uploading a logo.',
+      });
+      event.target.value = '';
       return;
     }
 
@@ -117,22 +147,25 @@ export default function DashboardPage() {
         error: '',
       });
 
-      const response = await uploadAuthenticLogos(files);
+      const response = await uploadAuthenticLogos([file], logoBrandName.trim());
 
       setUploadStatus({
         loading: false,
         success:
-          response?.message || `${files.length} authentic logo file(s) uploaded successfully.`,
+          response?.items?.length
+            ? 'Authentic logo uploaded successfully.'
+            : 'Upload completed successfully.',
         error: '',
       });
 
+      setLogoBrandName('');
       await loadDashboard();
       event.target.value = '';
     } catch (error) {
       setUploadStatus({
         loading: false,
         success: '',
-        error: error.message || 'Failed to upload authentic logo files.',
+        error: error.message || 'Failed to upload authentic logo file.',
       });
     }
   };
@@ -140,11 +173,15 @@ export default function DashboardPage() {
   const onViolationSubmit = async (values) => {
     try {
       setReportFeedback({ success: '', error: '' });
-      const response = await reportViolation(values);
+
+      const payload = buildReportPayload(values);
+      await reportViolation(payload);
+
       setReportFeedback({
-        success: response?.message || 'Violation report submitted successfully.',
+        success: 'Violation report submitted successfully.',
         error: '',
       });
+
       reset(violationDefaultValues);
       await loadDashboard();
     } catch (error) {
@@ -251,10 +288,9 @@ export default function DashboardPage() {
 
             <div className={`${fx.cardTight} border-dashed border-cyan-500/20 text-center`}>
               <Building2 className="mx-auto h-6 w-6 text-cyan-500/60" />
-              <h4 className="mt-3 text-sm font-semibold text-white">Brand asset library ready for backend storage</h4>
+              <h4 className="mt-3 text-sm font-semibold text-white">Brand asset library connected to backend</h4>
               <p className="mt-1 text-sm text-zinc-500">
-                The frontend upload flow is complete. The backend only needs to accept multipart logo files and persist
-                them.
+                Authentic company logos are now uploaded to the backend and stored in the reference logo library.
               </p>
             </div>
           </article>
@@ -267,19 +303,27 @@ export default function DashboardPage() {
               Upload original company logos to enrich comparison rules and support verification.
             </p>
 
+            <div className="mt-4">
+              <input
+                value={logoBrandName}
+                onChange={(event) => setLogoBrandName(event.target.value)}
+                placeholder="Brand name (Nike, Adidas...)"
+                className={fieldClass}
+              />
+            </div>
+
             <label
               className={`mt-4 flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-cyan-500/25 bg-cyan-500/[0.06] px-4 text-center transition hover:border-fuchsia-400/30 hover:bg-fuchsia-500/[0.06]`}
             >
               <UploadCloud className="h-6 w-6 text-cyan-400" />
               <span className="mt-3 text-sm font-semibold text-white">
-                {uploadStatus.loading ? 'Uploading...' : 'Drop authentic logo files or click to upload'}
+                {uploadStatus.loading ? 'Uploading...' : 'Drop authentic logo file or click to upload'}
               </span>
               <span className="mt-1 text-sm text-zinc-500">SVG, PNG, JPG supported</span>
-              <input type="file" multiple className="sr-only" onChange={handleLogoUpload} />
+              <input type="file" className="sr-only" onChange={handleLogoUpload} />
             </label>
 
             {uploadStatus.success && <div className={`mt-4 ${fx.alertSuccess}`}>{uploadStatus.success}</div>}
-
             {uploadStatus.error && <div className={`mt-4 ${fx.alertError}`}>{uploadStatus.error}</div>}
           </article>
 
@@ -330,7 +374,6 @@ export default function DashboardPage() {
             </form>
 
             {reportFeedback.success && <div className={`mt-4 ${fx.alertSuccess}`}>{reportFeedback.success}</div>}
-
             {reportFeedback.error && <div className={`mt-4 ${fx.alertError}`}>{reportFeedback.error}</div>}
 
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -353,8 +396,7 @@ export default function DashboardPage() {
                 Backend-ready contract
               </p>
               <p className="mt-1 text-sm text-zinc-500">
-                This dashboard already expects live stats, recent analyses, logo uploads, and violation submission from
-                the backend API.
+                This dashboard now submits real logo uploads and violation reports to the backend API.
               </p>
             </div>
           </article>

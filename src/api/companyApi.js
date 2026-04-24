@@ -13,21 +13,32 @@ export async function getCompanyDashboard() {
   return normalizeDashboard(response);
 }
 
-export async function uploadAuthenticLogos(files) {
+export async function uploadAuthenticLogos(files, brandName = 'Default Brand') {
   if (env.useMockApi) {
     return mockApi.uploadAuthenticLogos(files);
   }
 
-  const formData = new FormData();
+  const normalizedFiles = Array.from(files || []);
+  if (!normalizedFiles.length) {
+    throw new Error('At least one image is required');
+  }
 
-  Array.from(files || []).forEach((file) => {
-    formData.append('logos', file);
-  });
+  const uploadedItems = [];
 
-  return apiRequest(API_ENDPOINTS.UPLOAD_AUTHENTIC_LOGOS, {
-    method: 'POST',
-    body: formData,
-  });
+  for (const file of normalizedFiles) {
+    const formData = new FormData();
+    formData.append('brandName', brandName);
+    formData.append('image', file);
+
+    const response = await apiRequest(API_ENDPOINTS.UPLOAD_AUTHENTIC_LOGOS, {
+      method: 'POST',
+      body: formData,
+    });
+
+    uploadedItems.push(response.item ?? response);
+  }
+
+  return { items: uploadedItems };
 }
 
 export async function reportViolation(payload) {

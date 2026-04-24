@@ -29,6 +29,8 @@ export function normalizeStatus(value) {
     counterfeit: 'counterfeit',
     fake: 'counterfeit',
     fraudulent: 'counterfeit',
+    no_logo_detected: 'unknown',
+    error: 'unknown',
   };
 
   return aliases[normalizedValue] || 'unknown';
@@ -43,6 +45,8 @@ export function normalizeUser(payload) {
     name: user.name || user.fullName || user.displayName || 'Unknown User',
     email: user.email || '',
     role: user.role || user.jobTitle || 'Member',
+    companyName: user.companyName || '',
+    isActive: Boolean(user.isActive ?? true),
   };
 }
 
@@ -63,15 +67,40 @@ export function normalizeAnalysisRecord(payload = {}) {
 
   return {
     id: String(data.id || data.analysisId || data._id || `analysis-${Date.now()}`),
-    fileName: data.fileName || data.filename || data.sourceFileName || data.originalName || 'Uploaded file',
+    fileName:
+      data.fileName ||
+      data.filename ||
+      data.sourceFileName ||
+      data.originalName ||
+      data.originalImagePath?.split?.('\\').pop?.() ||
+      data.originalImagePath?.split?.('/')?.pop?.() ||
+      'Uploaded file',
     status,
-    statusLabel: formatStatusLabel(status),
-    confidence: ensureNumber(data.confidence || data.score || data.probability || data.matchScore, 0),
+    statusLabel: data.statusLabel || formatStatusLabel(status),
+    confidence: ensureNumber(
+      data.confidence || data.score || data.probability || data.matchScore,
+      0,
+    ),
     brandName: data.brandName || data.brand || data.detectedBrand || data.company || 'Unknown',
     notes: data.notes || data.reason || data.description || data.summary || '',
-    createdAt: data.createdAt || data.created_at || data.scannedAt || data.timestamp || new Date().toISOString(),
-    imageUrl: data.imageUrl || data.previewUrl || data.sourceImageUrl || data.logoUrl || '',
+    createdAt:
+      data.createdAt ||
+      data.created_at ||
+      data.scannedAt ||
+      data.timestamp ||
+      new Date().toISOString(),
+    imageUrl:
+      data.imageUrl ||
+      data.previewUrl ||
+      data.sourceImageUrl ||
+      data.logoUrl ||
+      data.originalImagePath ||
+      '',
     sourceType: data.sourceType || data.source || data.channel || 'user-upload',
+    sourceUrl: data.sourceUrl || '',
+    similarityScore: ensureNumber(data.similarityScore, 0),
+    originalImagePath: data.originalImagePath || '',
+    croppedLogoPath: data.croppedLogoPath || '',
     raw: data,
   };
 }
@@ -94,6 +123,29 @@ export function normalizeAnalysisList(payload) {
   return [];
 }
 
+function normalizeReferenceLogo(item = {}) {
+  return {
+    id: item.id || item._id || '',
+    userId: item.userId || '',
+    brandName: item.brandName || item.brand || 'Unknown',
+    imagePath: item.imagePath || item.imageUrl || '',
+    createdAt: item.createdAt || new Date().toISOString(),
+    updatedAt: item.updatedAt || item.createdAt || new Date().toISOString(),
+  };
+}
+
+function normalizeReport(item = {}) {
+  return {
+    id: item.id || item._id || '',
+    userId: item.userId || '',
+    analysisId: item.analysisId || null,
+    reportType: item.reportType || '',
+    description: item.description || '',
+    createdAt: item.createdAt || new Date().toISOString(),
+    updatedAt: item.updatedAt || item.createdAt || new Date().toISOString(),
+  };
+}
+
 export function normalizeDashboard(payload) {
   const data = unwrapData(payload) || {};
   const stats = data.stats || data.overview || {};
@@ -104,8 +156,19 @@ export function normalizeDashboard(payload) {
       authenticCount: ensureNumber(stats.authenticCount || stats.authentic || stats.verified),
       suspiciousCount: ensureNumber(stats.suspiciousCount || stats.suspicious || stats.review),
       counterfeitCount: ensureNumber(stats.counterfeitCount || stats.counterfeit || stats.fake),
-      violationReports: ensureNumber(stats.violationReports || stats.reportedViolations || stats.violations),
+      violationReports: ensureNumber(
+        stats.violationReports ||
+          stats.reportedViolations ||
+          stats.violations ||
+          data.recentReports?.length,
+      ),
     },
     recentAnalyses: normalizeAnalysisList(data.recentAnalyses || data.recent || data.latest || []),
+    referenceLogos: Array.isArray(data.referenceLogos)
+      ? data.referenceLogos.map(normalizeReferenceLogo)
+      : [],
+    recentReports: Array.isArray(data.recentReports)
+      ? data.recentReports.map(normalizeReport)
+      : [],
   };
 }

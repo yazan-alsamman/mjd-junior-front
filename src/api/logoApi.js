@@ -3,7 +3,6 @@ import {
   cacheAnalysis,
   cacheAnalyses,
   getCachedAnalysisById,
-  mergeAnalysisLists,
 } from '../lib/analysisStore';
 import {
   normalizeAnalysisList,
@@ -13,15 +12,23 @@ import { apiRequest } from './client';
 import { API_ENDPOINTS } from './endpoints';
 import * as mockApi from './mockApi';
 
+function ensureArray(value) {
+  if (Array.isArray(value)) return value;
+  if (Array.isArray(value?.items)) return value.items;
+  if (Array.isArray(value?.results)) return value.results;
+  return [];
+}
+
 export async function checkLogo(file) {
   if (env.useMockApi) {
     const result = await mockApi.checkLogo(file);
-    cacheAnalysis(result);
-    return normalizeAnalysisRecord(result);
+    const normalized = normalizeAnalysisRecord(result);
+    cacheAnalysis(normalized);
+    return normalized;
   }
 
   const formData = new FormData();
-  formData.append('logo', file);
+  formData.append('image', file);
 
   const response = await apiRequest(API_ENDPOINTS.CHECK_LOGO, {
     method: 'POST',
@@ -29,7 +36,7 @@ export async function checkLogo(file) {
     auth: false,
   });
 
-  const result = normalizeAnalysisRecord(response);
+  const result = normalizeAnalysisRecord(response.item ?? response);
   cacheAnalysis(result);
   return result;
 }
@@ -37,8 +44,9 @@ export async function checkLogo(file) {
 export async function getAnalysisHistory() {
   if (env.useMockApi) {
     const items = await mockApi.getAnalysisHistory();
-    cacheAnalyses(items);
-    return mergeAnalysisLists(normalizeAnalysisList(items));
+    const normalized = normalizeAnalysisList(items);
+    cacheAnalyses(normalized);
+    return normalized;
   }
 
   const response = await apiRequest(API_ENDPOINTS.ANALYSIS_HISTORY, {
@@ -46,16 +54,20 @@ export async function getAnalysisHistory() {
     auth: false,
   });
 
-  const items = normalizeAnalysisList(response);
-  cacheAnalyses(items);
-  return mergeAnalysisLists(items);
+  const rawItems = ensureArray(response);
+  const normalizedItems = rawItems.map(normalizeAnalysisRecord);
+
+  cacheAnalyses(normalizedItems);
+
+  return normalizedItems;
 }
 
 export async function getAnalysisById(id) {
   if (env.useMockApi) {
     const item = await mockApi.getAnalysisById(id);
-    cacheAnalysis(item);
-    return normalizeAnalysisRecord(item);
+    const normalized = normalizeAnalysisRecord(item);
+    cacheAnalysis(normalized);
+    return normalized;
   }
 
   try {
@@ -64,7 +76,7 @@ export async function getAnalysisById(id) {
       auth: false,
     });
 
-    const item = normalizeAnalysisRecord(response);
+    const item = normalizeAnalysisRecord(response.item ?? response);
     cacheAnalysis(item);
     return item;
   } catch (error) {

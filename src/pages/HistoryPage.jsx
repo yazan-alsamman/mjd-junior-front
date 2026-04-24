@@ -8,6 +8,13 @@ import { getAnalysisHistory } from '../api/logoApi';
 import { formatDateTime } from '../lib/formatters';
 import { fx, fxStatusBadge } from '../lib/futureUi';
 
+function ensureArray(value) {
+  if (Array.isArray(value)) return value;
+  if (Array.isArray(value?.items)) return value.items;
+  if (Array.isArray(value?.results)) return value.results;
+  return [];
+}
+
 export default function HistoryPage() {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -17,9 +24,11 @@ export default function HistoryPage() {
     try {
       setIsLoading(true);
       setError('');
+
       const data = await getAnalysisHistory();
-      setItems(data);
+      setItems(ensureArray(data));
     } catch (err) {
+      setItems([]);
       setError(err.message || 'Failed to load analysis history.');
     } finally {
       setIsLoading(false);
@@ -30,6 +39,8 @@ export default function HistoryPage() {
     loadHistory();
   }, [loadHistory]);
 
+  const safeItems = ensureArray(items);
+
   return (
     <FuturisticPageShell>
       <FuturisticTopBar
@@ -39,6 +50,7 @@ export default function HistoryPage() {
               <ArrowLeft className="h-4 w-4" />
               Home
             </Link>
+
             <button type="button" onClick={loadHistory} className={fx.btnGhost}>
               <RefreshCw className="h-4 w-4" />
               Refresh
@@ -59,21 +71,23 @@ export default function HistoryPage() {
         <section className={fx.card}>
           <p className={fx.kicker}>User history</p>
           <h1 className={fx.titleHero}>Previous logo analyses</h1>
-          <p className={`mt-3 max-w-2xl ${fx.body}`}>Review your previous product checks and authenticity decisions.</p>
+          <p className={`mt-3 max-w-2xl ${fx.body}`}>
+            Review your previous product checks and authenticity decisions.
+          </p>
 
-          {isLoading && (
-            <div className={`mt-6 ${fx.alertInfo}`}>Loading history...</div>
-          )}
+          {isLoading && <div className={`mt-6 ${fx.alertInfo}`}>Loading history...</div>}
 
           {error && <div className={`mt-6 ${fx.alertError}`}>{error}</div>}
 
           {!isLoading && !error && (
             <div className="mt-8 space-y-4">
-              {items.length === 0 && (
-                <div className={`${fx.panel} p-5 text-sm text-zinc-400`}>No previous analyses found.</div>
+              {safeItems.length === 0 && (
+                <div className={`${fx.panel} p-5 text-sm text-zinc-400`}>
+                  No previous analyses found.
+                </div>
               )}
 
-              {items.map((item) => (
+              {safeItems.map((item) => (
                 <Link
                   key={item.id}
                   to={`/history/${item.id}`}
@@ -86,8 +100,14 @@ export default function HistoryPage() {
                       </div>
 
                       <div>
-                        <p className="text-sm font-semibold text-white">{item.fileName}</p>
-                        <p className="mt-1 text-sm text-zinc-500">Brand: {item.brandName}</p>
+                        <p className="text-sm font-semibold text-white">
+                          {item.fileName || 'Uploaded file'}
+                        </p>
+
+                        <p className="mt-1 text-sm text-zinc-500">
+                          Brand: {item.brandName || 'Unknown'}
+                        </p>
+
                         <p className="mt-1 inline-flex items-center gap-1 font-mono text-xs text-zinc-600">
                           <Clock3 className="h-3.5 w-3.5" />
                           {formatDateTime(item.createdAt)}
@@ -96,8 +116,13 @@ export default function HistoryPage() {
                     </div>
 
                     <div className="text-right">
-                      <span className={fxStatusBadge(item.status)}>{item.statusLabel}</span>
-                      <p className="mt-2 text-sm font-semibold text-white">{Math.round(item.confidence)}%</p>
+                      <span className={fxStatusBadge(item.status || 'unknown')}>
+                        {item.statusLabel || 'Unknown'}
+                      </span>
+
+                      <p className="mt-2 text-sm font-semibold text-white">
+                        {Math.round(Number(item.confidence) || 0)}%
+                      </p>
                     </div>
                   </div>
                 </Link>
