@@ -5,18 +5,18 @@ import { brand } from '../../../config/brand';
 const chapters = [
   {
     year: '01',
-    title: 'Signal acquisition',
-    copy: 'Every upload becomes a structured evidence packet—hashes, color spaces, and edge topology preserved.',
+    title: 'Upload a product image',
+    copy: 'A user starts with a product photo. Verisigil prepares the image for logo detection and visual comparison.',
   },
   {
     year: '02',
-    title: 'Dual inference',
-    copy: 'Neural perception meets deterministic rules so teams see both the “what” and the “why”.',
+    title: 'AI-powered verification',
+    copy: 'The platform checks visual details, compares logo similarity, and returns a clear result with confidence.',
   },
   {
     year: '03',
-    title: 'Action fabric',
-    copy: 'From consumer clarity to enterprise escalation, the same substrate powers both sides of the market.',
+    title: 'Company follow-up',
+    copy: 'Brand teams can upload authentic logos, review suspicious detections, and report violations for action.',
   },
 ];
 
@@ -44,14 +44,14 @@ export default function FutureAbout() {
             transition={{ duration: 0.65 }}
           >
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.28em] text-fuchsia-300/80">
-              Ledger · origin story
+              Workflow
             </p>
             <h2 className="mt-4 font-syne text-4xl font-bold leading-[1.05] text-white sm:text-5xl">
-              We built {brand.name} for the edge between craft and chaos.
+              Built for shoppers and brand teams.
             </h2>
             <p className="mt-6 text-base leading-relaxed text-zinc-500">
-              Counterfeits move faster than policy. {brand.name} is the control room where intuition becomes
-              defensible signal—without sanding away the drama of real-world brand work.
+              Counterfeit signals can appear in product photos, websites, marketplaces, and social channels.
+              {brand.name} keeps scan results, trusted logos, and violation reports connected in one place.
             </p>
           </motion.div>
 

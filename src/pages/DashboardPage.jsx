@@ -288,9 +288,9 @@ export default function DashboardPage() {
 
             <div className={`${fx.cardTight} border-dashed border-cyan-500/20 text-center`}>
               <Building2 className="mx-auto h-6 w-6 text-cyan-500/60" />
-              <h4 className="mt-3 text-sm font-semibold text-white">Brand asset library connected to backend</h4>
+              <h4 className="mt-3 text-sm font-semibold text-white">Brand asset library</h4>
               <p className="mt-1 text-sm text-zinc-500">
-                Authentic company logos are now uploaded to the backend and stored in the reference logo library.
+                Keep authentic company logos organized for future verification and comparison.
               </p>
             </div>
           </article>
@@ -393,10 +393,10 @@ export default function DashboardPage() {
             <div id="settings" className={`mt-4 rounded-xl border border-dashed border-white/15 p-4`}>
               <p className="inline-flex items-center gap-2 text-sm font-semibold text-white">
                 <BadgeCheck className="h-4 w-4 text-emerald-400" />
-                Backend-ready contract
+                Brand protection workflow
               </p>
               <p className="mt-1 text-sm text-zinc-500">
-                This dashboard now submits real logo uploads and violation reports to the backend API.
+                Track logo uploads, verification results, and violation reports in one secure workspace.
               </p>
             </div>
           </article>

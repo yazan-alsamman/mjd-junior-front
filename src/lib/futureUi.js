@@ -11,7 +11,7 @@ export const fx = {
   containerWide: 'relative z-10 mx-auto w-full max-w-6xl',
 
   /** Padding below fixed FuturisticTopBar */
-  mainTop: 'pt-24 pb-16 sm:pt-28',
+  mainTop: 'pt-32 pb-16 sm:pt-32',
 
   card: 'rounded-3xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-xl sm:p-8',
   cardTight: 'rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5 backdrop-blur-md',

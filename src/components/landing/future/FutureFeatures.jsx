@@ -14,8 +14,8 @@ const tiles = [
     id: 't1',
     span: 'lg:col-span-2 lg:row-span-2',
     icon: Radar,
-    title: 'Omnichannel radar',
-    body: 'Surface violations from marketplaces, social, and rogue domains in one coherent stream.',
+    title: 'Violation monitoring',
+    body: 'Review suspicious logo use from websites, marketplaces, and social reports in one workspace.',
     accent: 'from-violet-500/30 to-transparent',
     href: '/dashboard',
   },
@@ -23,8 +23,8 @@ const tiles = [
     id: 't2',
     span: '',
     icon: Zap,
-    title: 'Sub-second verdict',
-    body: 'Edge-optimized inference with explainable confidence.',
+    title: 'Fast logo verdicts',
+    body: 'Upload a product image and receive an authenticity result with confidence and notes.',
     accent: 'from-cyan-500/25 to-transparent',
     href: '/check',
   },
@@ -32,8 +32,8 @@ const tiles = [
     id: 't3',
     span: '',
     icon: Fingerprint,
-    title: 'Glyph DNA',
-    body: 'Vector + raster fusion for tamper hints.',
+    title: 'Forensic comparison',
+    body: 'AI-powered visual checks compare shapes, marks, and image details for tamper hints.',
     accent: 'from-fuchsia-500/25 to-transparent',
     href: '/check',
   },
@@ -41,8 +41,8 @@ const tiles = [
     id: 't4',
     span: 'lg:col-span-2',
     icon: Workflow,
-    title: 'Playbooks, not PDFs',
-    body: 'Wire authentic assets, route escalations, and export audit trails without leaving the canvas.',
+    title: 'Company workflow',
+    body: 'Upload authentic logos, review detections, and record violation reports without leaving the dashboard.',
     accent: 'from-emerald-500/20 to-transparent',
     href: '/login',
   },
@@ -50,8 +50,8 @@ const tiles = [
     id: 't5',
     span: '',
     icon: ShieldHalf,
-    title: 'Zero-trust uplink',
-    body: 'Encrypted transit, ephemeral previews.',
+    title: 'Secure scan flow',
+    body: 'Uploads move through a secure scan flow before analysis is performed.',
     accent: 'from-amber-500/20 to-transparent',
     href: '/check',
   },
@@ -59,8 +59,8 @@ const tiles = [
     id: 't6',
     span: '',
     icon: Globe2,
-    title: 'Geo-fenced watch',
-    body: 'Region-tuned heuristics for local counterfeits.',
+    title: 'Brand coverage',
+    body: 'Keep trusted logo references and suspicious reports organized by brand and source.',
     accent: 'from-sky-500/20 to-transparent',
     href: '/dashboard',
   },
@@ -97,11 +97,11 @@ export default function FutureFeatures() {
           className="max-w-3xl"
         >
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300/80">
-            Forge · capability matrix
+            Features
           </p>
           <h2 className="mt-4 font-syne text-4xl font-bold leading-tight text-white sm:text-5xl">
-            Instruments for
-            <span className="block text-zinc-500">the post-trust economy.</span>
+            Practical tools for
+            <span className="block text-zinc-500">logo verification.</span>
           </h2>
         </motion.div>
 
@@ -143,7 +143,7 @@ export default function FutureFeatures() {
                     to={tile.href}
                     className="mt-5 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-fuchsia-300/90 opacity-0 transition group-hover:opacity-100"
                   >
-                    Open channel
+                    Open workflow
                     <span className="h-px w-8 bg-gradient-to-r from-fuchsia-400 to-transparent" />
                   </Link>
                 </div>

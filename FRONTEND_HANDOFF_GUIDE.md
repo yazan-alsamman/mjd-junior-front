@@ -48,7 +48,7 @@ npm run dev
 In `.env`:
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000/api
+VITE_API_BASE_URL=http://localhost:4000/api
 VITE_USE_MOCK_API=false
 VITE_API_TIMEOUT_MS=20000
 ```
@@ -85,7 +85,7 @@ Then restart the dev server.
 The frontend sends `X-Guest-Token` on public requests so the backend can associate anonymous history with the same browser.
 
 `POST /logos/check` should accept `multipart/form-data` with field name:
-- `logo`
+- `image`
 
 A compatible analysis response shape is:
 
@@ -135,18 +135,18 @@ A compatible dashboard response shape is:
 ```
 
 ### Upload authentic logos
-`POST /company/logos/upload` must accept `multipart/form-data` with repeated field name:
-- `logos`
+`POST /company/logos/upload` accepts `multipart/form-data` with:
+- `brandName`
+- `image`
 
 ### Report violation
 `POST /company/violations/report` accepts JSON:
 
 ```json
 {
-  "brand": "Nike",
-  "source": "website",
-  "url": "https://example.com/item/123",
-  "notes": "Suspicious logo distortion"
+  "analysisId": null,
+  "reportType": "WEBSITE",
+  "description": "Brand: Nike | URL: https://example.com/item/123 | Notes: Suspicious logo distortion"
 }
 ```
 

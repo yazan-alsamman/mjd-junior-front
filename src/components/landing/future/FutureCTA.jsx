@@ -40,17 +40,17 @@ export default function FutureCTA() {
                 transition={{ duration: 2.8, repeat: Infinity }}
               >
                 <Radio className="h-3.5 w-3.5 text-fuchsia-400" aria-hidden />
-                Open frequency
+                Ready when you are
               </motion.div>
               <h2 className="font-syne text-4xl font-bold leading-[1.02] text-white sm:text-5xl lg:text-6xl">
-                Ignite your
+                Start checking
                 <span className="block bg-gradient-to-r from-white via-cyan-200 to-fuchsia-300 bg-clip-text text-transparent">
-                  verification mesh.
+                  product logos.
                 </span>
               </h2>
               <p className="mt-6 text-lg text-zinc-400">
-                Ship the next era of brand defense in days, not quarters. Connect the API, drop assets, and let the
-                console speak in verdicts your legal team can stand behind.
+                Run a quick logo scan as a guest, or sign in as a company to upload authentic references, review
+                detections, and report violations from the dashboard.
               </p>
             </div>
 
@@ -68,7 +68,7 @@ export default function FutureCTA() {
                 to="/login"
                 className="inline-flex w-full items-center justify-center rounded-2xl border border-white/15 px-8 py-4 text-center text-sm font-semibold text-zinc-200 transition hover:border-white/25 hover:bg-white/[0.04] sm:w-auto"
               >
-                Enterprise handshake
+                Company login
               </Link>
             </div>
           </div>

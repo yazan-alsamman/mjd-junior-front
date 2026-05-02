@@ -36,10 +36,10 @@ export default function SidebarNav() {
 
         <div className="mt-auto rounded-2xl border border-fuchsia-500/20 bg-fuchsia-950/20 p-4">
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fuchsia-300/90">
-            Integration
+            Workflow
           </p>
           <p className="mt-2 text-sm font-medium leading-snug text-zinc-300">
-            Dashboard is ready for backend-powered stats, uploads, and violation reports.
+            Review detections, manage logo assets, and track violation reports.
           </p>
         </div>
       </div>

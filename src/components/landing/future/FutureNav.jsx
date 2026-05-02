@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import BrandMark from '../../brand/BrandMark';
 import ThemeToggle from '../../common/ThemeToggle';
 const links = [
-  { href: '#signal', label: 'Signal' },
-  { href: '#forge', label: 'Forge' },
-  { href: '#ledger', label: 'Ledger' },
-  { href: '#ignite', label: 'Ignite' },
+  { href: '#signal', label: 'Scan' },
+  { href: '#forge', label: 'Features' },
+  { href: '#ledger', label: 'Workflow' },
+  { href: '#ignite', label: 'Start' },
 ];
 
 export default function FutureNav() {
@@ -26,7 +26,7 @@ export default function FutureNav() {
         <div className="flex items-center gap-3">
           <BrandMark to="/" light />
           <span className="hidden rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-300/90 sm:inline">
-            Neural OS
+            Logo verification
           </span>
         </div>
 
@@ -50,7 +50,7 @@ export default function FutureNav() {
             to="/login"
             className="hidden rounded-xl border border-white/10 px-3 py-2 font-mono text-xs font-medium uppercase tracking-wider text-zinc-300 transition hover:border-white/20 hover:text-white sm:inline-flex"
           >
-            Access
+            Company login
           </Link>
           <motion.div whileHover={reduce ? {} : { scale: 1.03 }} whileTap={reduce ? {} : { scale: 0.97 }}>
             <Link
@@ -58,7 +58,7 @@ export default function FutureNav() {
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_40px_-10px_rgba(168,85,247,0.7)] transition [background-size:200%_auto] hover:bg-right"
               style={{ backgroundPosition: '0% 50%' }}
             >
-              Launch scan
+              Start scan
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </motion.div>
@@ -97,7 +97,7 @@ export default function FutureNav() {
             className="rounded-lg px-3 py-3 font-mono text-xs uppercase tracking-widest text-zinc-300"
             onClick={() => setOpen(false)}
           >
-            Access
+            Company login
           </Link>
         </motion.div>
       )}

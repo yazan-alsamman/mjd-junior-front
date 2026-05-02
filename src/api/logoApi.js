@@ -33,7 +33,6 @@ export async function checkLogo(file) {
   const response = await apiRequest(API_ENDPOINTS.CHECK_LOGO, {
     method: 'POST',
     body: formData,
-    auth: false,
   });
 
   const result = normalizeAnalysisRecord(response.item ?? response);
@@ -51,7 +50,6 @@ export async function getAnalysisHistory() {
 
   const response = await apiRequest(API_ENDPOINTS.ANALYSIS_HISTORY, {
     method: 'GET',
-    auth: false,
   });
 
   const rawItems = ensureArray(response);
@@ -73,7 +71,6 @@ export async function getAnalysisById(id) {
   try {
     const response = await apiRequest(API_ENDPOINTS.ANALYSIS_DETAILS(id), {
       method: 'GET',
-      auth: false,
     });
 
     const item = normalizeAnalysisRecord(response.item ?? response);

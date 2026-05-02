@@ -63,7 +63,7 @@ export default function LoginForm({ onLogin, onSuccess, variant = 'default' }) {
     setSubmitError('');
     setSubmitSuccess('');
     setSocialMessage(
-      'Google sign-in is not connected yet. Keep this button only if your backend will expose an OAuth flow.',
+      'Google sign-in is not available for this workspace yet. Please continue with email.',
     );
   };
 
@@ -190,7 +190,7 @@ export default function LoginForm({ onLogin, onSuccess, variant = 'default' }) {
             <span>Remember me</span>
           </label>
 
-          <span className={hint}>Backend can wire forgot-password later.</span>
+          <span className={hint}>Password reset is not available in this workspace yet.</span>
         </div>
 
         <button type="submit" disabled={isSubmitting} className={submitBtn}>

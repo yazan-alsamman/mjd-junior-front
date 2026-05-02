@@ -72,16 +72,16 @@ export default function FutureHero() {
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-cyan-200/90 shadow-[0_0_40px_-12px_rgba(34,211,238,0.5)]"
           >
             <Sparkles className="h-3.5 w-3.5 text-fuchsia-400" aria-hidden />
-            Live inference · forensic-grade trace
+            AI visual verification
           </motion.div>
 
           <motion.h1
             variants={fadeUp}
             className="font-syne text-[clamp(2.6rem,6vw,4.75rem)] font-bold leading-[0.95] tracking-tight text-white"
           >
-            Decode reality
+            Verify product logos
             <span className="block bg-gradient-to-r from-cyan-300 via-white to-fuchsia-400 bg-clip-text text-transparent">
-              behind every mark.
+              before you trust them.
             </span>
           </motion.h1>
 
@@ -89,8 +89,9 @@ export default function FutureHero() {
             variants={fadeUp}
             className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-400 sm:text-xl"
           >
-            {brand.name} fuses vision models with rule-based forensics so individuals can trust
-            what they buy—and teams can hunt misuse across the open web.
+            {brand.name} lets users upload product images and see whether a logo looks authentic,
+            suspicious, or counterfeit. Companies can manage trusted logo assets, review detections,
+            and report violations from one secure workspace.
           </motion.p>
 
           <motion.div variants={fadeUp} className="mt-10 flex flex-wrap items-center gap-4">
@@ -104,7 +105,7 @@ export default function FutureHero() {
                   <span className="absolute inset-0 translate-x-[-100%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition duration-700 group-hover:translate-x-[100%]" />
                 </span>
                 <Cpu className="relative h-5 w-5" aria-hidden />
-                <span className="relative">Initialize scan</span>
+                <span className="relative">Start free scan</span>
               </Link>
             </motion.div>
 
@@ -113,7 +114,7 @@ export default function FutureHero() {
               className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-zinc-200 backdrop-blur-sm transition hover:border-white/25 hover:bg-white/[0.06]"
             >
               <Orbit className="h-4 w-4 text-cyan-400" aria-hidden />
-              Command center
+              Open dashboard
             </Link>
           </motion.div>
 
@@ -122,16 +123,16 @@ export default function FutureHero() {
             className="mt-14 grid grid-cols-3 gap-6 border-t border-white/10 pt-10 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500 sm:text-[11px]"
           >
             <div>
-              <dt className="text-zinc-600">Latency</dt>
+              <dt className="text-zinc-600">Upload</dt>
               <dd className="mt-2 text-lg font-semibold tracking-normal text-white">&lt; 1.2s</dd>
             </div>
             <div>
               <dt className="text-zinc-600">Verdicts</dt>
-              <dd className="mt-2 text-lg font-semibold tracking-normal text-white">3-axis</dd>
+              <dd className="mt-2 text-lg font-semibold tracking-normal text-white">3 types</dd>
             </div>
             <div>
-              <dt className="text-zinc-600">Channels</dt>
-              <dd className="mt-2 text-lg font-semibold tracking-normal text-white">Web + SO</dd>
+              <dt className="text-zinc-600">Workspace</dt>
+              <dd className="mt-2 text-lg font-semibold tracking-normal text-white">Teams</dd>
             </div>
           </motion.dl>
         </motion.div>
@@ -153,10 +154,10 @@ export default function FutureHero() {
               <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-5">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-fuchsia-300/90">
-                    Session / uplink
+                    Logo check
                   </p>
                   <p className="mt-1 font-syne text-xl font-semibold text-white">
-                    Spectral capture
+                    Visual verification
                   </p>
                 </div>
                 <div className="flex gap-1.5">
@@ -168,11 +169,11 @@ export default function FutureHero() {
 
               <div className="mt-6 space-y-4 font-mono text-xs text-zinc-400">
                 <div className="flex items-center justify-between rounded-xl border border-white/5 bg-black/40 px-4 py-3">
-                  <span>Tensor mesh</span>
+                  <span>Image upload</span>
                   <span className="text-cyan-300">stable</span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-white/5 bg-black/40 px-4 py-3">
-                  <span>Glyph confidence</span>
+                  <span>Match confidence</span>
                   <span className="text-fuchsia-300">94.2%</span>
                 </div>
                 <div className="relative h-36 overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-indigo-950/80 to-black">
@@ -196,7 +197,7 @@ export default function FutureHero() {
               </div>
 
               <p className="mt-5 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-600">
-                Drag consciousness across the glass plane
+                Upload. Compare. Decide.
               </p>
             </div>
           </motion.div>

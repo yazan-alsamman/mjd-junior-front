@@ -14,8 +14,8 @@ const cols = [
   {
     title: 'Company',
     links: [
-      { to: '/', label: 'Manifesto' },
-      { to: '/login', label: 'Access' },
+      { to: '/', label: 'Overview' },
+      { to: '/login', label: 'Company login' },
     ],
   },
 ];

@@ -28,7 +28,7 @@ export default function LoginPage() {
         start={
           <Link to="/" className={fx.btnGhost}>
             <ArrowLeft className="h-4 w-4" aria-hidden />
-            Signal
+            Home
           </Link>
         }
         end={
@@ -79,7 +79,7 @@ export default function LoginPage() {
 
             <div className="mt-10 flex flex-wrap items-center gap-3 font-mono text-xs text-zinc-500">
               <LockKeyhole className="h-4 w-4 text-cyan-400/80" />
-              Session persistence and backend-ready token handling enabled.
+              Secure session access for your verification workspace.
             </div>
           </section>
 

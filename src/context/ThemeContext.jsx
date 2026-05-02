@@ -2,32 +2,30 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 const ThemeContext = createContext(null);
 
+function forceDarkMode() {
+  const root = document.documentElement;
+
+  root.classList.add('dark');
+  root.dataset.theme = 'dark';
+  window.localStorage.setItem('theme', 'dark');
+  window.localStorage.setItem('app-theme', 'dark');
+}
+
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    const savedTheme = window.localStorage.getItem('app-theme');
-    return savedTheme || 'light';
-  });
+  const [theme] = useState('dark');
 
   useEffect(() => {
-    const root = document.documentElement;
-
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-
-    window.localStorage.setItem('app-theme', theme);
-  }, [theme]);
+    forceDarkMode();
+  }, []);
 
   const toggleTheme = () => {
-    setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'));
+    forceDarkMode();
   };
 
   const value = useMemo(
     () => ({
       theme,
-      isDarkMode: theme === 'dark',
+      isDarkMode: true,
       toggleTheme,
     }),
     [theme],
