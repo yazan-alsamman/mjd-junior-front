@@ -79,17 +79,23 @@ const crawlerDefaultFilters = {
   targetSite: '',
 };
 
+const getCompanyDisplayName = (user) =>
+  user?.company?.name || user?.companyName || 'Current company';
+
+const getCompanyBrandName = (user) =>
+  user?.company?.brandSlug || user?.companyName || user?.company?.name || 'Default Brand';
+
 const fieldClass = `${fx.input}`;
 const errText = 'mt-1 text-xs text-rose-300';
 
-function buildReportPayload(values) {
+function buildReportPayload(values, companyDisplayName) {
   const normalizedSource = String(values.source || 'other').toUpperCase();
 
   return {
     analysisId: null,
     reportType: normalizedSource,
     description: [
-      values.brand ? `Brand: ${values.brand}` : '',
+      companyDisplayName ? `Company: ${companyDisplayName}` : '',
       values.url ? `URL: ${values.url}` : '',
       values.notes ? `Notes: ${values.notes}` : '',
     ]
@@ -107,7 +113,6 @@ export default function DashboardPage() {
   const [crawlerLoading, setCrawlerLoading] = useState(true);
   const [crawlerError, setCrawlerError] = useState('');
   const [crawlerFilters, setCrawlerFilters] = useState(crawlerDefaultFilters);
-  const [logoBrandName, setLogoBrandName] = useState('');
   const [uploadStatus, setUploadStatus] = useState({
     loading: false,
     success: '',
@@ -129,6 +134,9 @@ export default function DashboardPage() {
     success: '',
     error: '',
   });
+
+  const companyDisplayName = getCompanyDisplayName(user);
+  const companyBrandName = getCompanyBrandName(user);
 
   const loadCrawlerResults = useCallback(async () => {
     try {
@@ -192,16 +200,6 @@ export default function DashboardPage() {
       return;
     }
 
-    if (!logoBrandName.trim()) {
-      setUploadStatus({
-        loading: false,
-        success: '',
-        error: 'Please enter a brand name before uploading a logo.',
-      });
-      event.target.value = '';
-      return;
-    }
-
     try {
       setUploadStatus({
         loading: true,
@@ -209,7 +207,7 @@ export default function DashboardPage() {
         error: '',
       });
 
-      const response = await uploadAuthenticLogos([file], logoBrandName.trim());
+      const response = await uploadAuthenticLogos([file], companyBrandName);
 
       setUploadStatus({
         loading: false,
@@ -220,7 +218,6 @@ export default function DashboardPage() {
         error: '',
       });
 
-      setLogoBrandName('');
       await loadDashboard();
       event.target.value = '';
     } catch (error) {
@@ -236,7 +233,7 @@ export default function DashboardPage() {
     try {
       setReportFeedback({ success: '', error: '' });
 
-      const payload = buildReportPayload(values);
+      const payload = buildReportPayload(values, companyDisplayName);
       await reportViolation(payload);
 
       setReportFeedback({
@@ -286,6 +283,11 @@ export default function DashboardPage() {
             Review suspicious activity, upload authentic references, and track incoming logo-related reports from users
             and monitored channels.
           </p>
+
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100">
+            <Building2 className="h-4 w-4 text-cyan-300" />
+            Company brand: {companyDisplayName}
+          </div>
 
           <div className="mt-5 flex flex-wrap gap-3">
             <a href="#brand-monitoring" className={fx.btnSolid}>
@@ -382,6 +384,7 @@ export default function DashboardPage() {
             >
               <option value="">All statuses</option>
               <option value="pending_analysis">Pending analysis</option>
+              <option value="pending_similarity">Pending similarity</option>
               <option value="suspicious">Suspicious</option>
               <option value="counterfeit">Counterfeit</option>
               <option value="authentic">Authentic</option>
@@ -396,6 +399,7 @@ export default function DashboardPage() {
               <option value="">All sources</option>
               <option value="instagram">Instagram</option>
               <option value="marketplace">Marketplace</option>
+              <option value="web">Web</option>
               <option value="google_images">Google Images</option>
               <option value="social_media">Social Media</option>
             </select>
@@ -462,13 +466,14 @@ export default function DashboardPage() {
               Upload original company logos to enrich comparison rules and support verification.
             </p>
 
-            <div className="mt-4">
-              <input
-                value={logoBrandName}
-                onChange={(event) => setLogoBrandName(event.target.value)}
-                placeholder="Brand name (Nike, Adidas...)"
-                className={fieldClass}
-              />
+            <div className={`${fx.panel} mt-4 p-4`}>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300/80">
+                Company brand
+              </p>
+              <p className="mt-1 text-sm font-semibold text-white">{companyDisplayName}</p>
+              <p className="mt-1 text-xs text-zinc-500">
+                Uploaded authentic logos will be linked automatically to this company account.
+              </p>
             </div>
 
             <label
@@ -492,16 +497,17 @@ export default function DashboardPage() {
               Log a suspicious or fake logo finding and record its source for follow-up.
             </p>
 
-            <form onSubmit={handleSubmit(onViolationSubmit)} className="mt-4 space-y-3">
-              <div>
-                <input
-                  {...register('brand')}
-                  placeholder="Brand (Nike, Adidas...)"
-                  className={fieldClass}
-                />
-                {errors.brand && <p className={errText}>{errors.brand.message}</p>}
-              </div>
+            <div className={`${fx.panel} mt-4 p-4`}>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300/80">
+                Reporting as
+              </p>
+              <p className="mt-1 text-sm font-semibold text-white">{companyDisplayName}</p>
+              <p className="mt-1 text-xs text-zinc-500">
+                The report will be linked automatically to your company account.
+              </p>
+            </div>
 
+            <form onSubmit={handleSubmit(onViolationSubmit)} className="mt-4 space-y-3">
               <div>
                 <select {...register('source')} className={fieldClass}>
                   <option value="website">Website</option>

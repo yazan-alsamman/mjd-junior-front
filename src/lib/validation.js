@@ -45,7 +45,6 @@ export const loginDefaultValues = {
 };
 
 export const violationSchema = z.object({
-  brand: z.string().trim().min(1, 'Brand is required.'),
   source: z.enum(['website', 'social', 'marketplace', 'other']),
   url: z
     .string()
@@ -58,7 +57,6 @@ export const violationSchema = z.object({
 });
 
 export const violationDefaultValues = {
-  brand: '',
   source: 'website',
   url: '',
   notes: '',
