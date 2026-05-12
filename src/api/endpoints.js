@@ -6,6 +6,8 @@ export const API_ENDPOINTS = {
   ANALYSIS_HISTORY: '/logos/history',
   ANALYSIS_DETAILS: (id) => `/logos/${id}`,
   COMPANY_DASHBOARD: '/company/dashboard',
+  COMPANY_CRAWLER_RESULTS: '/company/results',
+  COMPANY_CRAWLER_RESULT_DETAILS: (id) => `/company/results/${id}`,
   UPLOAD_AUTHENTIC_LOGOS: '/company/logos/upload',
   REPORT_VIOLATION: '/company/violations/report',
 };

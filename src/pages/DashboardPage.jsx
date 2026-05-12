@@ -14,12 +14,14 @@ import {
 import DashboardLayout from '../layouts/DashboardLayout';
 import { useAuth } from '../context/AuthContext';
 import {
+  getCompanyCrawlerResults,
   getCompanyDashboard,
   reportViolation,
   uploadAuthenticLogos,
 } from '../api/companyApi';
 import RecentAnalysesTable from '../components/dashboard/RecentAnalysesTable';
 import AnalyticsOverview from '../components/dashboard/AnalyticsOverview';
+import CrawlerResultsTable from '../components/dashboard/CrawlerResultsTable';
 import { formatCompactNumber } from '../lib/formatters';
 import { fx } from '../lib/futureUi';
 import {
@@ -45,6 +47,16 @@ const sources = [
   },
 ];
 
+const emptyCrawlerStats = {
+  totalCrawlerResults: 0,
+  pendingAnalysisCount: 0,
+  suspiciousCount: 0,
+  counterfeitCount: 0,
+  fakeAccountsCount: 0,
+  instagramCount: 0,
+  googleImagesCount: 0,
+};
+
 const emptyDashboard = {
   stats: {
     totalAnalyses: 0,
@@ -53,9 +65,18 @@ const emptyDashboard = {
     counterfeitCount: 0,
     violationReports: 0,
   },
+  crawlerStats: emptyCrawlerStats,
   recentAnalyses: [],
+  recentCrawlerResults: [],
   referenceLogos: [],
   recentReports: [],
+};
+
+const crawlerDefaultFilters = {
+  status: '',
+  sourceType: '',
+  accountLabel: '',
+  targetSite: '',
 };
 
 const fieldClass = `${fx.input}`;
@@ -82,6 +103,10 @@ export default function DashboardPage() {
   const [dashboard, setDashboard] = useState(emptyDashboard);
   const [dashboardLoading, setDashboardLoading] = useState(true);
   const [dashboardError, setDashboardError] = useState('');
+  const [crawlerResults, setCrawlerResults] = useState([]);
+  const [crawlerLoading, setCrawlerLoading] = useState(true);
+  const [crawlerError, setCrawlerError] = useState('');
+  const [crawlerFilters, setCrawlerFilters] = useState(crawlerDefaultFilters);
   const [logoBrandName, setLogoBrandName] = useState('');
   const [uploadStatus, setUploadStatus] = useState({
     loading: false,
@@ -105,6 +130,23 @@ export default function DashboardPage() {
     error: '',
   });
 
+  const loadCrawlerResults = useCallback(async () => {
+    try {
+      setCrawlerLoading(true);
+      setCrawlerError('');
+      const data = await getCompanyCrawlerResults({
+        ...crawlerFilters,
+        page: 1,
+        limit: 10,
+      });
+      setCrawlerResults(data.items || []);
+    } catch (error) {
+      setCrawlerError(error.message || 'Failed to load crawler results.');
+    } finally {
+      setCrawlerLoading(false);
+    }
+  }, [crawlerFilters]);
+
   const loadDashboard = useCallback(async () => {
     try {
       setDashboardLoading(true);
@@ -121,6 +163,26 @@ export default function DashboardPage() {
   useEffect(() => {
     loadDashboard();
   }, [loadDashboard]);
+
+  useEffect(() => {
+    loadCrawlerResults();
+  }, [loadCrawlerResults]);
+
+  const refreshAll = async () => {
+    await Promise.all([loadDashboard(), loadCrawlerResults()]);
+  };
+
+  const handleCrawlerFilterChange = (event) => {
+    const { name, value } = event.target;
+    setCrawlerFilters((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  };
+
+  const resetCrawlerFilters = () => {
+    setCrawlerFilters(crawlerDefaultFilters);
+  };
 
   const handleLogoUpload = async (event) => {
     const files = event.target.files;
@@ -193,6 +255,7 @@ export default function DashboardPage() {
   };
 
   const stats = dashboard.stats || emptyDashboard.stats;
+  const crawlerStats = dashboard.crawlerStats || emptyCrawlerStats;
 
   return (
     <DashboardLayout>
@@ -207,7 +270,7 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <button type="button" onClick={loadDashboard} className={fx.btnGhost}>
+          <button type="button" onClick={refreshAll} className={fx.btnGhost}>
             Refresh data
           </button>
         </header>
@@ -225,9 +288,9 @@ export default function DashboardPage() {
           </p>
 
           <div className="mt-5 flex flex-wrap gap-3">
-            <a href="#recent-analyses" className={fx.btnSolid}>
+            <a href="#brand-monitoring" className={fx.btnSolid}>
               <ShieldCheck className="h-4 w-4 text-brand-700" />
-              Review detections
+              Review crawler results
             </a>
 
             <a href="#violations" className={fx.btnOutline}>
@@ -267,6 +330,102 @@ export default function DashboardPage() {
               {dashboardLoading ? '—' : formatCompactNumber(stats.violationReports)}
             </p>
           </div>
+        </section>
+
+        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className={fx.statCard}>
+            <p className="text-sm text-zinc-500">Crawler results</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-cyan-200">
+              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.totalCrawlerResults)}
+            </p>
+          </div>
+
+          <div className={fx.statCard}>
+            <p className="text-sm text-zinc-500">Pending analysis</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-indigo-200">
+              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.pendingAnalysisCount)}
+            </p>
+          </div>
+
+          <div className={fx.statCard}>
+            <p className="text-sm text-zinc-500">Instagram findings</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-fuchsia-200">
+              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.instagramCount)}
+            </p>
+          </div>
+
+          <div className={fx.statCard}>
+            <p className="text-sm text-zinc-500">Google Images</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-sky-200">
+              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.googleImagesCount)}
+            </p>
+          </div>
+        </section>
+
+        <section id="brand-monitoring" className="overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.03] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-xl">
+          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] px-5 py-4">
+            <div>
+              <h3 className="font-syne text-lg font-semibold text-white">Brand Monitoring Results</h3>
+              <p className="mt-1 text-sm text-zinc-500">
+                Company-specific crawler findings from Instagram and Google Images.
+              </p>
+            </div>
+            <span className="font-mono text-xs uppercase tracking-wider text-zinc-500">Crawler view</span>
+          </header>
+
+          <div className="grid gap-3 border-b border-white/[0.08] px-5 py-4 sm:grid-cols-2 xl:grid-cols-5">
+            <select
+              name="status"
+              value={crawlerFilters.status}
+              onChange={handleCrawlerFilterChange}
+              className={fieldClass}
+            >
+              <option value="">All statuses</option>
+              <option value="pending_analysis">Pending analysis</option>
+              <option value="suspicious">Suspicious</option>
+              <option value="counterfeit">Counterfeit</option>
+              <option value="authentic">Authentic</option>
+            </select>
+
+            <select
+              name="sourceType"
+              value={crawlerFilters.sourceType}
+              onChange={handleCrawlerFilterChange}
+              className={fieldClass}
+            >
+              <option value="">All sources</option>
+              <option value="instagram">Instagram</option>
+              <option value="marketplace">Marketplace</option>
+              <option value="google_images">Google Images</option>
+              <option value="social_media">Social Media</option>
+            </select>
+
+            <select
+              name="accountLabel"
+              value={crawlerFilters.accountLabel}
+              onChange={handleCrawlerFilterChange}
+              className={fieldClass}
+            >
+              <option value="">All account labels</option>
+              <option value="real">Real</option>
+              <option value="suspicious">Suspicious</option>
+              <option value="fake">Fake</option>
+            </select>
+
+            <input
+              name="targetSite"
+              value={crawlerFilters.targetSite}
+              onChange={handleCrawlerFilterChange}
+              placeholder="Target site"
+              className={fieldClass}
+            />
+
+            <button type="button" onClick={resetCrawlerFilters} className={fx.btnGhost}>
+              Reset filters
+            </button>
+          </div>
+
+          <CrawlerResultsTable items={crawlerResults} loading={crawlerLoading} error={crawlerError} />
         </section>
 
         <section id="recent-analyses" className="grid gap-5 xl:grid-cols-[1.35fr_0.65fr]">

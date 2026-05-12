@@ -29,6 +29,7 @@ export function normalizeStatus(value) {
     counterfeit: 'counterfeit',
     fake: 'counterfeit',
     fraudulent: 'counterfeit',
+    pending_analysis: 'unknown',
     no_logo_detected: 'unknown',
     error: 'unknown',
   };
@@ -45,7 +46,9 @@ export function normalizeUser(payload) {
     name: user.name || user.fullName || user.displayName || 'Unknown User',
     email: user.email || '',
     role: user.role || user.jobTitle || 'Member',
-    companyName: user.companyName || '',
+    companyName: user.companyName || user.company?.name || '',
+    companyId: user.companyId ?? user.company?.id ?? null,
+    company: user.company || null,
     isActive: Boolean(user.isActive ?? true),
   };
 }
@@ -146,6 +149,88 @@ function normalizeReport(item = {}) {
   };
 }
 
+function normalizeCrawlerStats(stats = {}) {
+  return {
+    totalCrawlerResults: ensureNumber(stats.totalCrawlerResults),
+    pendingAnalysisCount: ensureNumber(stats.pendingAnalysisCount),
+    suspiciousCount: ensureNumber(stats.suspiciousCount),
+    counterfeitCount: ensureNumber(stats.counterfeitCount),
+    fakeAccountsCount: ensureNumber(stats.fakeAccountsCount),
+    instagramCount: ensureNumber(stats.instagramCount),
+    googleImagesCount: ensureNumber(stats.googleImagesCount),
+  };
+}
+
+export function normalizeCrawlerResult(item = {}) {
+  const productStatus = String(item.productStatus || item.status || 'pending_analysis')
+    .trim()
+    .toLowerCase();
+
+  return {
+    id: String(item.id || item._id || ''),
+    companyId: item.companyId ?? null,
+    brand: item.brand || item.brandName || 'Unknown',
+    sourceType: item.sourceType || item.source || '',
+    sourceName: item.sourceName || '',
+    sourceUrl: item.sourceUrl || '',
+    platform: item.platform || '',
+    title: item.title || '',
+    description: item.description || '',
+    imageUrl: item.imageUrl || '',
+    localImagePath: item.localImagePath || '',
+    sellerName: item.sellerName || '',
+    sellerProfileUrl: item.sellerProfileUrl || '',
+    productStatus,
+    productStatusLabel:
+      item.productStatusLabel ||
+      (productStatus === 'pending_analysis' ? 'Pending Analysis' : formatStatusLabel(productStatus)),
+    productConfidence: item.productConfidence ?? null,
+    brandName: item.brandName || '',
+    similarityScore: item.similarityScore ?? null,
+    croppedLogoPath: item.croppedLogoPath || '',
+    aiNotes: item.aiNotes || null,
+    accountLabel: item.accountLabel || '',
+    fakeProbability: item.fakeProbability ?? null,
+    realProbability: item.realProbability ?? null,
+    accountScorePercent: item.accountScorePercent ?? null,
+    targetSite: item.targetSite || '',
+    searchQuery: item.searchQuery || '',
+    capturedAt: item.capturedAt || item.createdAt || '',
+    createdAt: item.createdAt || '',
+    updatedAt: item.updatedAt || item.createdAt || '',
+    raw: item,
+  };
+}
+
+export function normalizeCrawlerResults(payload) {
+  const data = unwrapData(payload);
+
+  if (Array.isArray(data)) {
+    return {
+      items: data.map(normalizeCrawlerResult),
+      meta: {
+        page: 1,
+        limit: data.length,
+        total: data.length,
+        totalPages: data.length ? 1 : 0,
+      },
+    };
+  }
+
+  const items = Array.isArray(data?.items) ? data.items.map(normalizeCrawlerResult) : [];
+  const meta = data?.meta || {};
+
+  return {
+    items,
+    meta: {
+      page: ensureNumber(meta.page, 1),
+      limit: ensureNumber(meta.limit, 10),
+      total: ensureNumber(meta.total, items.length),
+      totalPages: ensureNumber(meta.totalPages, items.length ? 1 : 0),
+    },
+  };
+}
+
 export function normalizeDashboard(payload) {
   const data = unwrapData(payload) || {};
   const stats = data.stats || data.overview || {};
@@ -163,7 +248,11 @@ export function normalizeDashboard(payload) {
           data.recentReports?.length,
       ),
     },
+    crawlerStats: normalizeCrawlerStats(data.crawlerStats),
     recentAnalyses: normalizeAnalysisList(data.recentAnalyses || data.recent || data.latest || []),
+    recentCrawlerResults: Array.isArray(data.recentCrawlerResults)
+      ? data.recentCrawlerResults.map(normalizeCrawlerResult)
+      : [],
     referenceLogos: Array.isArray(data.referenceLogos)
       ? data.referenceLogos.map(normalizeReferenceLogo)
       : [],
