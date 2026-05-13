@@ -34,6 +34,22 @@ export async function getCompanyCrawlerResultById(id) {
   return normalizeCrawlerResult(response.item ?? response);
 }
 
+export async function startCompanyGoogleScan(payload) {
+  if (env.useMockApi) {
+    return {
+      message: 'Mock scan started',
+      brand: 'mock',
+      sites: payload?.sites || [],
+      limit: payload?.limit || 5,
+    };
+  }
+
+  return apiRequest(API_ENDPOINTS.COMPANY_GOOGLE_SCAN, {
+    method: 'POST',
+    body: payload,
+  });
+}
+
 export async function uploadAuthenticLogos(files, brandName = 'Default Brand') {
   if (env.useMockApi) {
     return mockApi.uploadAuthenticLogos(files);

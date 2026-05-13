@@ -17,6 +17,7 @@ import {
   getCompanyCrawlerResults,
   getCompanyDashboard,
   reportViolation,
+  startCompanyGoogleScan,
   uploadAuthenticLogos,
 } from '../api/companyApi';
 import RecentAnalysesTable from '../components/dashboard/RecentAnalysesTable';
@@ -113,6 +114,13 @@ export default function DashboardPage() {
   const [crawlerLoading, setCrawlerLoading] = useState(true);
   const [crawlerError, setCrawlerError] = useState('');
   const [crawlerFilters, setCrawlerFilters] = useState(crawlerDefaultFilters);
+  const [scanSite, setScanSite] = useState('shein.com');
+  const [scanLimit, setScanLimit] = useState(5);
+  const [scanStatus, setScanStatus] = useState({
+    loading: false,
+    success: '',
+    error: '',
+  });
   const [uploadStatus, setUploadStatus] = useState({
     loading: false,
     success: '',
@@ -190,6 +198,52 @@ export default function DashboardPage() {
 
   const resetCrawlerFilters = () => {
     setCrawlerFilters(crawlerDefaultFilters);
+  };
+
+  const handleGoogleScan = async (event) => {
+    event.preventDefault();
+
+    const normalizedSite = String(scanSite || '').trim();
+
+    if (!normalizedSite) {
+      setScanStatus({
+        loading: false,
+        success: '',
+        error: 'Please enter a target website.',
+      });
+      return;
+    }
+
+    try {
+      setScanStatus({
+        loading: true,
+        success: '',
+        error: '',
+      });
+
+      const response = await startCompanyGoogleScan({
+        sites: [normalizedSite],
+        limit: Number(scanLimit) || 5,
+      });
+
+      setScanStatus({
+        loading: false,
+        success: response?.message
+          ? `${response.message}. Results will appear after the crawler finishes.`
+          : 'Scan started. Results will appear after the crawler finishes.',
+        error: '',
+      });
+
+      window.setTimeout(() => {
+        refreshAll();
+      }, 8000);
+    } catch (error) {
+      setScanStatus({
+        loading: false,
+        success: '',
+        error: error.message || 'Failed to start targeted scan.',
+      });
+    }
   };
 
   const handleLogoUpload = async (event) => {
@@ -362,6 +416,53 @@ export default function DashboardPage() {
               {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.googleImagesCount)}
             </p>
           </div>
+        </section>
+
+        <section className={fx.card}>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className={fx.kicker}>Targeted monitoring</p>
+              <h3 className={fx.titleMd}>Targeted Site Scan</h3>
+              <p className={`mt-2 ${fx.body}`}>
+                Search for {companyDisplayName} products inside a specific website. The brand is selected automatically
+                from your company account.
+              </p>
+            </div>
+
+            <div className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100">
+              Brand: {companyDisplayName}
+            </div>
+          </div>
+
+          <form onSubmit={handleGoogleScan} className="mt-5 grid gap-3 lg:grid-cols-[1fr_140px_auto]">
+            <input
+              value={scanSite}
+              onChange={(event) => setScanSite(event.target.value)}
+              placeholder="Target website, e.g. shein.com"
+              className={fieldClass}
+            />
+
+            <input
+              type="number"
+              min="1"
+              max="20"
+              value={scanLimit}
+              onChange={(event) => setScanLimit(event.target.value)}
+              className={fieldClass}
+            />
+
+            <button type="submit" disabled={scanStatus.loading} className={fx.btnPrimary}>
+              {scanStatus.loading ? 'Starting...' : 'Run scan'}
+            </button>
+          </form>
+
+          <p className="mt-3 text-xs text-zinc-500">
+            This runs Google Images crawler for the current company brand only. Results are stored through the backend
+            and will appear in Brand Monitoring Results.
+          </p>
+
+          {scanStatus.success && <div className={`mt-4 ${fx.alertSuccess}`}>{scanStatus.success}</div>}
+          {scanStatus.error && <div className={`mt-4 ${fx.alertError}`}>{scanStatus.error}</div>}
         </section>
 
         <section id="brand-monitoring" className="overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.03] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-xl">
@@ -555,7 +656,7 @@ export default function DashboardPage() {
               })}
             </div>
 
-            <div id="settings" className={`mt-4 rounded-xl border border-dashed border-white/15 p-4`}>
+            <div id="settings" className="mt-4 rounded-xl border border-dashed border-white/15 p-4">
               <p className="inline-flex items-center gap-2 text-sm font-semibold text-white">
                 <BadgeCheck className="h-4 w-4 text-emerald-400" />
                 Brand protection workflow

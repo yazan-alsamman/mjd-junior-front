@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
   COMPANY_DASHBOARD: '/company/dashboard',
   COMPANY_CRAWLER_RESULTS: '/company/results',
   COMPANY_CRAWLER_RESULT_DETAILS: (id) => `/company/results/${id}`,
+  COMPANY_GOOGLE_SCAN: '/company/scans/google',
   UPLOAD_AUTHENTIC_LOGOS: '/company/logos/upload',
   REPORT_VIOLATION: '/company/violations/report',
 };
