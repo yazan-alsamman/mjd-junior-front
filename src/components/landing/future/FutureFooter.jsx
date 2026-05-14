@@ -6,9 +6,9 @@ const cols = [
   {
     title: 'Product',
     links: [
-      { to: '/check', label: 'Scan' },
-      { to: '/history', label: 'History' },
-      { to: '/dashboard', label: 'Dashboard' },
+      { to: '/check', label: 'Product check' },
+      { to: '/history', label: 'Guest history' },
+      { to: '/dashboard', label: 'Company dashboard' },
     ],
   },
   {
@@ -27,7 +27,10 @@ export default function FutureFooter() {
         <div>
           <p className="font-syne text-2xl font-bold text-white">{brand.name}</p>
           <p className="mt-2 max-w-xs font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-600">
-            {brand.tagline}
+            AI-powered brand protection
+          </p>
+          <p className="mt-3 max-w-sm text-sm text-zinc-500">
+            Product checks for users and monitoring tools for company accounts.
           </p>
         </div>
 
@@ -58,7 +61,7 @@ export default function FutureFooter() {
         <p className="font-mono text-[10px] text-zinc-700">
           © {new Date().getFullYear()} {brand.name}
           <span className="mx-2 text-zinc-800">·</span>
-          Crafted signal
+          Built for Verisigil
         </p>
       </div>
     </footer>

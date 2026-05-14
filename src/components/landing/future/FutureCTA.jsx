@@ -43,14 +43,14 @@ export default function FutureCTA() {
                 Ready when you are
               </motion.div>
               <h2 className="font-syne text-4xl font-bold leading-[1.02] text-white sm:text-5xl lg:text-6xl">
-                Start checking
+                Start protecting
                 <span className="block bg-gradient-to-r from-white via-cyan-200 to-fuchsia-300 bg-clip-text text-transparent">
-                  product logos.
+                  your brand signals.
                 </span>
               </h2>
               <p className="mt-6 text-lg text-zinc-400">
-                Run a quick logo scan as a guest, or sign in as a company to upload authentic references, review
-                detections, and report violations from the dashboard.
+                Run a quick logo check as a guest, or sign in as a company to monitor selected websites, verify crawler
+                findings, upload authentic references, and report violations from the dashboard.
               </p>
             </div>
 
@@ -60,7 +60,7 @@ export default function FutureCTA() {
                   to="/check"
                   className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-semibold text-black shadow-[0_0_60px_-15px_rgba(255,255,255,0.55)] sm:w-auto"
                 >
-                  Start free scan
+                  Start product check
                   <ArrowRight className="h-5 w-5" aria-hidden />
                 </Link>
               </motion.div>

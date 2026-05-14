@@ -72,16 +72,16 @@ export default function FutureHero() {
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-cyan-200/90 shadow-[0_0_40px_-12px_rgba(34,211,238,0.5)]"
           >
             <Sparkles className="h-3.5 w-3.5 text-fuchsia-400" aria-hidden />
-            AI visual verification
+            AI brand protection
           </motion.div>
 
           <motion.h1
             variants={fadeUp}
             className="font-syne text-[clamp(2.6rem,6vw,4.75rem)] font-bold leading-[0.95] tracking-tight text-white"
           >
-            Verify product logos
+            Detect suspicious logos
             <span className="block bg-gradient-to-r from-cyan-300 via-white to-fuchsia-400 bg-clip-text text-transparent">
-              before you trust them.
+              before counterfeit products spread.
             </span>
           </motion.h1>
 
@@ -89,9 +89,8 @@ export default function FutureHero() {
             variants={fadeUp}
             className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-400 sm:text-xl"
           >
-            {brand.name} lets users upload product images and see whether a logo looks authentic,
-            suspicious, or counterfeit. Companies can manage trusted logo assets, review detections,
-            and report violations from one secure workspace.
+            {brand.name} helps users check product images and gives companies a secure workspace to monitor Nike,
+            Adidas, and Puma products across uploaded images, Instagram findings, and targeted Google Images scans.
           </motion.p>
 
           <motion.div variants={fadeUp} className="mt-10 flex flex-wrap items-center gap-4">
@@ -105,7 +104,7 @@ export default function FutureHero() {
                   <span className="absolute inset-0 translate-x-[-100%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition duration-700 group-hover:translate-x-[100%]" />
                 </span>
                 <Cpu className="relative h-5 w-5" aria-hidden />
-                <span className="relative">Start free scan</span>
+                <span className="relative">Start product check</span>
               </Link>
             </motion.div>
 
@@ -114,7 +113,7 @@ export default function FutureHero() {
               className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/[0.03] px-6 py-4 text-sm font-semibold text-zinc-200 backdrop-blur-sm transition hover:border-white/25 hover:bg-white/[0.06]"
             >
               <Orbit className="h-4 w-4 text-cyan-400" aria-hidden />
-              Open dashboard
+              Open company dashboard
             </Link>
           </motion.div>
 
@@ -123,8 +122,8 @@ export default function FutureHero() {
             className="mt-14 grid grid-cols-3 gap-6 border-t border-white/10 pt-10 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500 sm:text-[11px]"
           >
             <div>
-              <dt className="text-zinc-600">Upload</dt>
-              <dd className="mt-2 text-lg font-semibold tracking-normal text-white">&lt; 1.2s</dd>
+              <dt className="text-zinc-600">Brands</dt>
+              <dd className="mt-2 text-lg font-semibold tracking-normal text-white">3 live</dd>
             </div>
             <div>
               <dt className="text-zinc-600">Verdicts</dt>
@@ -132,7 +131,7 @@ export default function FutureHero() {
             </div>
             <div>
               <dt className="text-zinc-600">Workspace</dt>
-              <dd className="mt-2 text-lg font-semibold tracking-normal text-white">Teams</dd>
+              <dd className="mt-2 text-lg font-semibold tracking-normal text-white">Company</dd>
             </div>
           </motion.dl>
         </motion.div>
@@ -154,10 +153,10 @@ export default function FutureHero() {
               <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-5">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-fuchsia-300/90">
-                    Logo check
+                    Logo pipeline
                   </p>
                   <p className="mt-1 font-syne text-xl font-semibold text-white">
-                    Visual verification
+                    Detection + similarity
                   </p>
                 </div>
                 <div className="flex gap-1.5">
@@ -169,12 +168,12 @@ export default function FutureHero() {
 
               <div className="mt-6 space-y-4 font-mono text-xs text-zinc-400">
                 <div className="flex items-center justify-between rounded-xl border border-white/5 bg-black/40 px-4 py-3">
-                  <span>Image upload</span>
-                  <span className="text-cyan-300">stable</span>
+                  <span>Logo detection</span>
+                  <span className="text-cyan-300">YOLO</span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-white/5 bg-black/40 px-4 py-3">
-                  <span>Match confidence</span>
-                  <span className="text-fuchsia-300">94.2%</span>
+                  <span>Similarity check</span>
+                  <span className="text-fuchsia-300">CLIP + shape</span>
                 </div>
                 <div className="relative h-36 overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-indigo-950/80 to-black">
                   <motion.div
@@ -197,7 +196,7 @@ export default function FutureHero() {
               </div>
 
               <p className="mt-5 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-600">
-                Upload. Compare. Decide.
+                Detect. Compare. Decide.
               </p>
             </div>
           </motion.div>

@@ -2,7 +2,7 @@ export const brand = {
   name: 'Verisigil',
   tagline: 'Proof Behind Every Mark',
   mission:
-    'AI-powered verification for authentic, manipulated, and counterfeit logo detection.',
+    'AI-powered brand protection for logo detection, similarity verification, and counterfeit monitoring.',
   urls: {
     home: '/',
     login: '/login',

@@ -29,7 +29,7 @@ export default function HistoryPage() {
       setItems(ensureArray(data));
     } catch (err) {
       setItems([]);
-      setError(err.message || 'Failed to load analysis history.');
+      setError(err.message || 'Failed to load product check history.');
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +61,7 @@ export default function HistoryPage() {
           <>
             <ThemeToggle />
             <Link to="/check" className={fx.btnPrimary}>
-              New Analysis
+              New product check
             </Link>
           </>
         }
@@ -69,13 +69,14 @@ export default function HistoryPage() {
 
       <div className={`${fx.containerNarrow} ${fx.mainTop} px-4 sm:px-6`}>
         <section className={fx.card}>
-          <p className={fx.kicker}>User history</p>
-          <h1 className={fx.titleHero}>Previous logo analyses</h1>
+          <p className={fx.kicker}>Guest product checks</p>
+          <h1 className={fx.titleHero}>Your previous logo checks</h1>
           <p className={`mt-3 max-w-2xl ${fx.body}`}>
-            Review your previous product checks and authenticity decisions.
+            Review product images checked from this browser/session. Company monitoring results are managed separately
+            inside the company dashboard.
           </p>
 
-          {isLoading && <div className={`mt-6 ${fx.alertInfo}`}>Loading history...</div>}
+          {isLoading && <div className={`mt-6 ${fx.alertInfo}`}>Loading product check history...</div>}
 
           {error && <div className={`mt-6 ${fx.alertError}`}>{error}</div>}
 
@@ -83,7 +84,7 @@ export default function HistoryPage() {
             <div className="mt-8 space-y-4">
               {safeItems.length === 0 && (
                 <div className={`${fx.panel} p-5 text-sm text-zinc-400`}>
-                  No previous analyses found.
+                  No previous product checks found. Upload a product image to start a new logo authenticity check.
                 </div>
               )}
 
@@ -101,11 +102,11 @@ export default function HistoryPage() {
 
                       <div>
                         <p className="text-sm font-semibold text-white">
-                          {item.fileName || 'Uploaded file'}
+                          {item.fileName || 'Uploaded product image'}
                         </p>
 
                         <p className="mt-1 text-sm text-zinc-500">
-                          Brand: {item.brandName || 'Unknown'}
+                          Detected brand: {item.brandName || 'Unknown'}
                         </p>
 
                         <p className="mt-1 inline-flex items-center gap-1 font-mono text-xs text-zinc-600">

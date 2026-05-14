@@ -25,10 +25,20 @@ export default function AnalyticsOverview({ stats }) {
 
   const items = chartData.some((item) => item.value > 0) ? chartData : defaultItems;
   const maxValue = Math.max(...items.map((item) => item.value), 1);
+  const total = Number(stats?.totalAnalyses || 0);
 
   return (
     <div className="rounded-2xl border border-white/[0.08] bg-black/30 p-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] backdrop-blur-sm">
-      <h3 className="font-syne text-lg font-semibold text-white">Analytics overview</h3>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="font-syne text-lg font-semibold text-white">Monitoring verdicts</h3>
+          <p className="mt-1 text-sm text-zinc-500">Final AI results from verified crawler findings.</p>
+        </div>
+
+        <div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-xs text-zinc-400">
+          Total {total}
+        </div>
+      </div>
 
       <div className="mt-5 space-y-4">
         {items.map((item) => (
@@ -47,6 +57,12 @@ export default function AnalyticsOverview({ stats }) {
           </div>
         ))}
       </div>
+
+      {!chartData.some((item) => item.value > 0) && (
+        <p className="mt-4 text-xs leading-relaxed text-zinc-600">
+          Run verification on monitoring results to populate final verdict analytics.
+        </p>
+      )}
     </div>
   );
 }

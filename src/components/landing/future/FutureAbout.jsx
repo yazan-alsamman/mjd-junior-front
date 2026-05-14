@@ -5,18 +5,18 @@ import { brand } from '../../../config/brand';
 const chapters = [
   {
     year: '01',
-    title: 'Upload a product image',
-    copy: 'A user starts with a product photo. Verisigil prepares the image for logo detection and visual comparison.',
+    title: 'Collect a product image',
+    copy: 'A user uploads a product photo, or a company starts a targeted monitoring scan for its own brand on a selected website.',
   },
   {
     year: '02',
-    title: 'AI-powered verification',
-    copy: 'The platform checks visual details, compares logo similarity, and returns a clear result with confidence.',
+    title: 'Detect and compare the logo',
+    copy: 'The backend sends the image through logo detection, crops each detected logo, then compares the crop with trusted references using similarity analysis.',
   },
   {
     year: '03',
-    title: 'Company follow-up',
-    copy: 'Brand teams can upload authentic logos, review suspicious detections, and report violations for action.',
+    title: 'Review the final verdict',
+    copy: 'Companies can review authentic, suspicious, and counterfeit findings, open source links, inspect logo crops, and record violation reports for follow-up.',
   },
 ];
 
@@ -47,11 +47,12 @@ export default function FutureAbout() {
               Workflow
             </p>
             <h2 className="mt-4 font-syne text-4xl font-bold leading-[1.05] text-white sm:text-5xl">
-              Built for shoppers and brand teams.
+              Built for shoppers and company teams.
             </h2>
             <p className="mt-6 text-base leading-relaxed text-zinc-500">
               Counterfeit signals can appear in product photos, websites, marketplaces, and social channels.
-              {brand.name} keeps scan results, trusted logos, and violation reports connected in one place.
+              {brand.name} connects guest product checks, crawler findings, trusted logos, and violation reports in one
+              clear workflow.
             </p>
           </motion.div>
 

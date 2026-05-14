@@ -14,8 +14,8 @@ const tiles = [
     id: 't1',
     span: 'lg:col-span-2 lg:row-span-2',
     icon: Radar,
-    title: 'Violation monitoring',
-    body: 'Review suspicious logo use from websites, marketplaces, and social reports in one workspace.',
+    title: 'Targeted brand monitoring',
+    body: 'Run focused Google Images scans for a company brand inside a selected website such as Shein or AliExpress.',
     accent: 'from-violet-500/30 to-transparent',
     href: '/dashboard',
   },
@@ -23,8 +23,8 @@ const tiles = [
     id: 't2',
     span: '',
     icon: Zap,
-    title: 'Fast logo verdicts',
-    body: 'Upload a product image and receive an authenticity result with confidence and notes.',
+    title: 'Fast product checks',
+    body: 'Users can upload a product image and receive a logo authenticity verdict with confidence and notes.',
     accent: 'from-cyan-500/25 to-transparent',
     href: '/check',
   },
@@ -32,8 +32,8 @@ const tiles = [
     id: 't3',
     span: '',
     icon: Fingerprint,
-    title: 'Forensic comparison',
-    body: 'AI-powered visual checks compare shapes, marks, and image details for tamper hints.',
+    title: 'Logo similarity analysis',
+    body: 'Detected logo crops are compared with trusted references using visual similarity and shape checks.',
     accent: 'from-fuchsia-500/25 to-transparent',
     href: '/check',
   },
@@ -42,7 +42,7 @@ const tiles = [
     span: 'lg:col-span-2',
     icon: Workflow,
     title: 'Company workflow',
-    body: 'Upload authentic logos, review detections, and record violation reports without leaving the dashboard.',
+    body: 'Company accounts can upload trusted logos, review monitoring results, verify findings, and record violation reports.',
     accent: 'from-emerald-500/20 to-transparent',
     href: '/login',
   },
@@ -50,8 +50,8 @@ const tiles = [
     id: 't5',
     span: '',
     icon: ShieldHalf,
-    title: 'Secure scan flow',
-    body: 'Uploads move through a secure scan flow before analysis is performed.',
+    title: 'Protected AI pipeline',
+    body: 'The frontend talks only to the Node backend, while AI services run behind the backend workflow.',
     accent: 'from-amber-500/20 to-transparent',
     href: '/check',
   },
@@ -59,8 +59,8 @@ const tiles = [
     id: 't6',
     span: '',
     icon: Globe2,
-    title: 'Brand coverage',
-    body: 'Keep trusted logo references and suspicious reports organized by brand and source.',
+    title: 'Live brand scope',
+    body: 'The current version supports Nike, Adidas, and Puma, with more brands possible in future releases.',
     accent: 'from-sky-500/20 to-transparent',
     href: '/dashboard',
   },
@@ -101,7 +101,7 @@ export default function FutureFeatures() {
           </p>
           <h2 className="mt-4 font-syne text-4xl font-bold leading-tight text-white sm:text-5xl">
             Practical tools for
-            <span className="block text-zinc-500">logo verification.</span>
+            <span className="block text-zinc-500">brand protection.</span>
           </h2>
         </motion.div>
 

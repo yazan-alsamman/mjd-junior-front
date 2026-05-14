@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BrandMark from '../../brand/BrandMark';
 import ThemeToggle from '../../common/ThemeToggle';
+
 const links = [
-  { href: '#signal', label: 'Scan' },
+  { href: '#signal', label: 'Overview' },
   { href: '#forge', label: 'Features' },
   { href: '#ledger', label: 'Workflow' },
   { href: '#ignite', label: 'Start' },
@@ -26,7 +27,7 @@ export default function FutureNav() {
         <div className="flex items-center gap-3">
           <BrandMark to="/" light />
           <span className="hidden rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-300/90 sm:inline">
-            Logo verification
+            Brand protection
           </span>
         </div>
 
@@ -58,7 +59,7 @@ export default function FutureNav() {
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_40px_-10px_rgba(168,85,247,0.7)] transition [background-size:200%_auto] hover:bg-right"
               style={{ backgroundPosition: '0% 50%' }}
             >
-              Start scan
+              Product check
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </motion.div>

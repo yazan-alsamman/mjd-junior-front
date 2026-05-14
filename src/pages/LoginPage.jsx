@@ -9,9 +9,9 @@ import { useAuth } from '../context/AuthContext';
 import { fx } from '../lib/futureUi';
 
 const featureItems = [
-  'Forensic visual analysis with confidence scoring',
-  'Manipulation detection for geometry and color anomalies',
-  'Traceable verdict history for audit workflows',
+  'Company-specific workspace for Nike, Adidas, and Puma accounts',
+  'Targeted Google Images monitoring for selected websites',
+  'Logo detection, similarity verification, and violation reporting in one dashboard',
 ];
 
 export default function LoginPage() {
@@ -50,16 +50,16 @@ export default function LoginPage() {
             <div className="mt-8 space-y-6">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-200/90">
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
-                Secure access
+                Company access
               </span>
 
               <h1 className="max-w-lg font-syne text-3xl font-bold leading-tight text-white sm:text-4xl">
-                Sign in to the trusted logo verification workspace
+                Sign in to your brand protection workspace
               </h1>
 
               <p className="max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
-                Access analysis timelines, suspicious logo alerts, and brand protection workflows in one secure
-                platform.
+                Access company monitoring results, verify crawler findings, upload trusted logos, and manage violation
+                reports from one secure dashboard.
               </p>
             </div>
 
@@ -79,7 +79,7 @@ export default function LoginPage() {
 
             <div className="mt-10 flex flex-wrap items-center gap-3 font-mono text-xs text-zinc-500">
               <LockKeyhole className="h-4 w-4 text-cyan-400/80" />
-              Secure session access for your verification workspace.
+              Secure session access for authorized company users.
             </div>
           </section>
 
@@ -87,7 +87,7 @@ export default function LoginPage() {
             <header className="mb-7 space-y-2">
               <p className={fx.kicker}>Welcome back</p>
               <h2 className="font-syne text-2xl font-bold text-white sm:text-3xl">Sign in to continue</h2>
-              <p className={fx.body}>Use your workspace account to access verification tools.</p>
+              <p className={fx.body}>Use your company account to access monitoring and verification tools.</p>
             </header>
 
             <LoginForm
