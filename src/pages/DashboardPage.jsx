@@ -26,10 +26,7 @@ import AnalyticsOverview from '../components/dashboard/AnalyticsOverview';
 import CrawlerResultsTable from '../components/dashboard/CrawlerResultsTable';
 import { formatCompactNumber } from '../lib/formatters';
 import { fx } from '../lib/futureUi';
-import {
-  violationDefaultValues,
-  violationSchema,
-} from '../lib/validation';
+import { violationDefaultValues, violationSchema } from '../lib/validation';
 
 const sources = [
   {
@@ -158,11 +155,13 @@ export default function DashboardPage() {
     try {
       setCrawlerLoading(true);
       setCrawlerError('');
+
       const data = await getCompanyCrawlerResults({
         ...crawlerFilters,
         page: 1,
         limit: 10,
       });
+
       setCrawlerResults(data.items || []);
     } catch (error) {
       setCrawlerError(error.message || 'Failed to load crawler results.');
@@ -175,6 +174,7 @@ export default function DashboardPage() {
     try {
       setDashboardLoading(true);
       setDashboardError('');
+
       const data = await getCompanyDashboard();
       setDashboard(data);
     } catch (error) {
@@ -198,6 +198,7 @@ export default function DashboardPage() {
 
   const handleCrawlerFilterChange = (event) => {
     const { name, value } = event.target;
+
     setCrawlerFilters((current) => ({
       ...current,
       [name]: value,
@@ -276,9 +277,15 @@ export default function DashboardPage() {
 
       await refreshAll();
     } catch (error) {
+      const rawMessage = error.message || '';
+
+      const friendlyMessage = rawMessage.toLowerCase().includes('local image')
+        ? 'This result cannot be verified because its downloaded image is no longer available. Open the source link or re-run the scan to download a fresh copy.'
+        : rawMessage || 'Failed to verify this monitoring result.';
+
       setVerifyStatus({
         success: '',
-        error: error.message || 'Failed to verify this monitoring result.',
+        error: friendlyMessage,
       });
     } finally {
       setVerifyingId('');
@@ -304,10 +311,9 @@ export default function DashboardPage() {
 
       setUploadStatus({
         loading: false,
-        success:
-          response?.items?.length
-            ? 'Authentic logo uploaded successfully.'
-            : 'Upload completed successfully.',
+        success: response?.items?.length
+          ? 'Authentic logo uploaded successfully.'
+          : 'Upload completed successfully.',
         error: '',
       });
 
@@ -376,9 +382,11 @@ export default function DashboardPage() {
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-200/80">
             Welcome back
           </p>
+
           <h2 className="mt-2 font-syne text-2xl font-bold text-white sm:text-3xl">
             {user?.name}, your brand integrity workspace is ready
           </h2>
+
           <p className="mt-2 max-w-2xl text-sm text-zinc-300">
             Review suspicious activity, upload authentic references, and track incoming logo-related reports from users
             and monitored channels.
@@ -511,7 +519,10 @@ export default function DashboardPage() {
           {scanStatus.error && <div className={`mt-4 ${fx.alertError}`}>{scanStatus.error}</div>}
         </section>
 
-        <section id="brand-monitoring" className="overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.03] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-xl">
+        <section
+          id="brand-monitoring"
+          className="overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.03] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-xl"
+        >
           <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] px-5 py-4">
             <div>
               <h3 className="font-syne text-lg font-semibold text-white">Brand Monitoring Results</h3>
@@ -520,6 +531,7 @@ export default function DashboardPage() {
                 and similarity analysis.
               </p>
             </div>
+
             <span className="font-mono text-xs uppercase tracking-wider text-zinc-500">Crawler view</span>
           </header>
 
@@ -610,18 +622,14 @@ export default function DashboardPage() {
             </p>
 
             <div className={`${fx.panel} mt-4 p-4`}>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300/80">
-                Company brand
-              </p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300/80">Company brand</p>
               <p className="mt-1 text-sm font-semibold text-white">{companyDisplayName}</p>
               <p className="mt-1 text-xs text-zinc-500">
                 Uploaded authentic logos will be linked automatically to this company account.
               </p>
             </div>
 
-            <label
-              className={`mt-4 flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-cyan-500/25 bg-cyan-500/[0.06] px-4 text-center transition hover:border-fuchsia-400/30 hover:bg-fuchsia-500/[0.06]`}
-            >
+            <label className="mt-4 flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-cyan-500/25 bg-cyan-500/[0.06] px-4 text-center transition hover:border-fuchsia-400/30 hover:bg-fuchsia-500/[0.06]">
               <UploadCloud className="h-6 w-6 text-cyan-400" />
               <span className="mt-3 text-sm font-semibold text-white">
                 {uploadStatus.loading ? 'Uploading...' : 'Drop authentic logo file or click to upload'}
@@ -636,14 +644,10 @@ export default function DashboardPage() {
 
           <article id="violations" className={fx.card}>
             <h3 className={fx.titleMd}>Report a violation</h3>
-            <p className={`mt-2 ${fx.body}`}>
-              Log a suspicious or fake logo finding and record its source for follow-up.
-            </p>
+            <p className={`mt-2 ${fx.body}`}>Log a suspicious or fake logo finding and record its source for follow-up.</p>
 
             <div className={`${fx.panel} mt-4 p-4`}>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300/80">
-                Reporting as
-              </p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300/80">Reporting as</p>
               <p className="mt-1 text-sm font-semibold text-white">{companyDisplayName}</p>
               <p className="mt-1 text-xs text-zinc-500">
                 The report will be linked automatically to your company account.
