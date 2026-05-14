@@ -15,6 +15,20 @@ function ensureArray(value) {
   return [];
 }
 
+function normalizePercent(value) {
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue)) {
+    return 0;
+  }
+
+  if (numericValue >= 0 && numericValue <= 1) {
+    return numericValue * 100;
+  }
+
+  return numericValue;
+}
+
 export default function HistoryPage() {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -69,7 +83,7 @@ export default function HistoryPage() {
 
       <div className={`${fx.containerNarrow} ${fx.mainTop} px-4 sm:px-6`}>
         <section className={fx.card}>
-          <p className={fx.kicker}>Guest product checks</p>
+          <p className={fx.kicker}>Product check history</p>
           <h1 className={fx.titleHero}>Your previous logo checks</h1>
           <p className={`mt-3 max-w-2xl ${fx.body}`}>
             Review product images checked from this browser/session. Company monitoring results are managed separately
@@ -88,46 +102,50 @@ export default function HistoryPage() {
                 </div>
               )}
 
-              {safeItems.map((item) => (
-                <Link
-                  key={item.id}
-                  to={`/history/${item.id}`}
-                  className="block rounded-2xl border border-white/[0.08] bg-black/25 p-4 transition hover:border-cyan-500/30 hover:bg-white/[0.04]"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="flex items-start gap-3">
-                      <div className="rounded-xl border border-white/10 bg-white/[0.05] p-3">
-                        <FileImage className="h-5 w-5 text-cyan-400" />
+              {safeItems.map((item) => {
+                const confidencePercent = normalizePercent(item.confidence);
+
+                return (
+                  <Link
+                    key={item.id}
+                    to={`/history/${item.id}`}
+                    className="block rounded-2xl border border-white/[0.08] bg-black/25 p-4 transition hover:border-cyan-500/30 hover:bg-white/[0.04]"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                      <div className="flex items-start gap-3">
+                        <div className="rounded-xl border border-white/10 bg-white/[0.05] p-3">
+                          <FileImage className="h-5 w-5 text-cyan-400" />
+                        </div>
+
+                        <div>
+                          <p className="text-sm font-semibold text-white">
+                            {item.fileName || 'Uploaded product image'}
+                          </p>
+
+                          <p className="mt-1 text-sm text-zinc-500">
+                            Detected brand: {item.brandName || 'Unknown'}
+                          </p>
+
+                          <p className="mt-1 inline-flex items-center gap-1 font-mono text-xs text-zinc-600">
+                            <Clock3 className="h-3.5 w-3.5" />
+                            {formatDateTime(item.createdAt)}
+                          </p>
+                        </div>
                       </div>
 
-                      <div>
-                        <p className="text-sm font-semibold text-white">
-                          {item.fileName || 'Uploaded product image'}
-                        </p>
+                      <div className="text-right">
+                        <span className={fxStatusBadge(item.status || 'unknown')}>
+                          {item.statusLabel || 'Unknown'}
+                        </span>
 
-                        <p className="mt-1 text-sm text-zinc-500">
-                          Detected brand: {item.brandName || 'Unknown'}
-                        </p>
-
-                        <p className="mt-1 inline-flex items-center gap-1 font-mono text-xs text-zinc-600">
-                          <Clock3 className="h-3.5 w-3.5" />
-                          {formatDateTime(item.createdAt)}
+                        <p className="mt-2 text-sm font-semibold text-white">
+                          {Math.round(confidencePercent)}%
                         </p>
                       </div>
                     </div>
-
-                    <div className="text-right">
-                      <span className={fxStatusBadge(item.status || 'unknown')}>
-                        {item.statusLabel || 'Unknown'}
-                      </span>
-
-                      <p className="mt-2 text-sm font-semibold text-white">
-                        {Math.round(Number(item.confidence) || 0)}%
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           )}
         </section>

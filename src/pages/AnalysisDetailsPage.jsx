@@ -15,6 +15,20 @@ const statusConfig = {
   unknown: { icon: BadgeCheck },
 };
 
+function normalizePercent(value) {
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue)) {
+    return 0;
+  }
+
+  if (numericValue >= 0 && numericValue <= 1) {
+    return numericValue * 100;
+  }
+
+  return numericValue;
+}
+
 export default function AnalysisDetailsPage() {
   const { id } = useParams();
   const [item, setItem] = useState(null);
@@ -40,6 +54,7 @@ export default function AnalysisDetailsPage() {
 
   const currentStatus = statusConfig[item?.status] || statusConfig.unknown;
   const StatusIcon = currentStatus.icon;
+  const confidencePercent = normalizePercent(item?.confidence);
 
   return (
     <FuturisticPageShell>
@@ -48,7 +63,7 @@ export default function AnalysisDetailsPage() {
           <div className="flex flex-wrap items-center gap-2">
             <Link to="/history" className={fx.btnGhost}>
               <ArrowLeft className="h-4 w-4" />
-              Guest history
+              History
             </Link>
             <Link to="/check" className={fx.btnPrimary}>
               New product check
@@ -92,7 +107,7 @@ export default function AnalysisDetailsPage() {
 
                 <div className={`${fx.panel} p-5`}>
                   <p className="text-sm text-zinc-500">Confidence</p>
-                  <p className="mt-1 text-base font-semibold text-white">{Math.round(Number(item.confidence) || 0)}%</p>
+                  <p className="mt-1 text-base font-semibold text-white">{Math.round(confidencePercent)}%</p>
                 </div>
               </div>
 

@@ -1,7 +1,22 @@
 import { fxStatusBadge } from '../../lib/futureUi';
 
+function normalizePercent(value) {
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue)) {
+    return 0;
+  }
+
+  if (numericValue >= 0 && numericValue <= 1) {
+    return numericValue * 100;
+  }
+
+  return numericValue;
+}
+
 export default function AnalysisResultCard({ result }) {
   const resultBadgeClass = fxStatusBadge(result?.status);
+  const confidencePercent = normalizePercent(result?.confidence);
 
   return (
     <div className="space-y-5">
@@ -13,7 +28,7 @@ export default function AnalysisResultCard({ result }) {
 
         <div>
           <p className="text-sm text-zinc-500">Confidence</p>
-          <p className="mt-1 text-base font-semibold text-white">{Math.round(result.confidence)}%</p>
+          <p className="mt-1 text-base font-semibold text-white">{Math.round(confidencePercent)}%</p>
         </div>
       </div>
 
@@ -22,7 +37,7 @@ export default function AnalysisResultCard({ result }) {
         <div className="h-2 w-full rounded-full bg-white/[0.08] ring-1 ring-white/[0.06]">
           <div
             className="h-2 rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 transition-all duration-500"
-            style={{ width: `${Math.min(Math.max(result.confidence, 0), 100)}%` }}
+            style={{ width: `${Math.min(Math.max(confidencePercent, 0), 100)}%` }}
           />
         </div>
       </div>
