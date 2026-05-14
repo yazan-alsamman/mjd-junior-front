@@ -125,7 +125,7 @@ export default function CheckLogoPage() {
           <>
             <ThemeToggle />
             <Link to="/history" className={fx.btnOutline}>
-              History
+              Guest history
             </Link>
           </>
         }
@@ -146,9 +146,13 @@ export default function CheckLogoPage() {
             <div className="mt-6 rounded-2xl border border-cyan-500/20 bg-cyan-500/[0.06] p-4">
               <p className="inline-flex items-center gap-2 text-sm font-semibold text-white">
                 <ShieldCheck className="h-4 w-4 text-cyan-400" aria-hidden />
-                Supported brands
+                Currently supported brands
               </p>
-              <p className="mt-2 text-sm text-zinc-400">Adidas, Nike, Puma, Zara, Gucci</p>
+              <p className="mt-2 text-sm font-semibold text-zinc-200">Nike, Adidas, Puma</p>
+              <p className="mt-1 text-xs text-zinc-500">
+                More brands such as Zara and Gucci can be added in future versions by training detection data and adding
+                trusted reference logos.
+              </p>
             </div>
 
             <label className={`mt-6 ${fx.dropzone}`}>
@@ -198,16 +202,16 @@ export default function CheckLogoPage() {
                 className={fx.btnPrimary}
               >
                 <ScanSearch className="h-4 w-4" />
-                {isAnalyzing ? 'Analyzing...' : 'Analyze Logo'}
+                {isAnalyzing ? 'Analyzing...' : 'Analyze logo'}
               </button>
 
               <Link to="/history" className={fx.btnGhost}>
-                View History
+                View guest history
               </Link>
 
               {result?.id && (
                 <Link to={`/history/${result.id}`} className={fx.btnOutline}>
-                  Open Details
+                  Open details
                 </Link>
               )}
             </div>
