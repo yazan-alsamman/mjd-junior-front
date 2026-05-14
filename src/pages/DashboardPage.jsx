@@ -19,6 +19,7 @@ import {
   reportViolation,
   startCompanyGoogleScan,
   uploadAuthenticLogos,
+  verifyCrawlerResultLogo,
 } from '../api/companyApi';
 import RecentAnalysesTable from '../components/dashboard/RecentAnalysesTable';
 import AnalyticsOverview from '../components/dashboard/AnalyticsOverview';
@@ -51,8 +52,11 @@ const sources = [
 const emptyCrawlerStats = {
   totalCrawlerResults: 0,
   pendingAnalysisCount: 0,
+  pendingSimilarityCount: 0,
+  authenticCount: 0,
   suspiciousCount: 0,
   counterfeitCount: 0,
+  noLogoDetectedCount: 0,
   fakeAccountsCount: 0,
   instagramCount: 0,
   googleImagesCount: 0,
@@ -116,6 +120,11 @@ export default function DashboardPage() {
   const [crawlerFilters, setCrawlerFilters] = useState(crawlerDefaultFilters);
   const [scanSite, setScanSite] = useState('shein.com');
   const [scanLimit, setScanLimit] = useState(5);
+  const [verifyingId, setVerifyingId] = useState('');
+  const [verifyStatus, setVerifyStatus] = useState({
+    success: '',
+    error: '',
+  });
   const [scanStatus, setScanStatus] = useState({
     loading: false,
     success: '',
@@ -230,7 +239,7 @@ export default function DashboardPage() {
         loading: false,
         success: response?.message
           ? `${response.message}. Results will appear after the crawler finishes.`
-          : 'Scan started. Results will appear after the crawler finishes.',
+          : 'Google Images scan started. Results will appear after the crawler finishes.',
         error: '',
       });
 
@@ -243,6 +252,37 @@ export default function DashboardPage() {
         success: '',
         error: error.message || 'Failed to start targeted scan.',
       });
+    }
+  };
+
+  const handleVerifyCrawlerResult = async (item) => {
+    if (!item?.id) return;
+
+    try {
+      setVerifyingId(item.id);
+      setVerifyStatus({
+        success: '',
+        error: '',
+      });
+
+      const result = await verifyCrawlerResultLogo(item.id);
+      const similarityCount = result?.similarity?.results?.length || 0;
+
+      setVerifyStatus({
+        success: similarityCount
+          ? 'Verification completed. Final verdict was saved and the monitoring results were refreshed.'
+          : 'Logo detection completed. The result is waiting for similarity verification or did not return a final verdict.',
+        error: '',
+      });
+
+      await refreshAll();
+    } catch (error) {
+      setVerifyStatus({
+        success: '',
+        error: error.message || 'Failed to verify this monitoring result.',
+      });
+    } finally {
+      setVerifyingId('');
     }
   };
 
@@ -308,6 +348,13 @@ export default function DashboardPage() {
   const stats = dashboard.stats || emptyDashboard.stats;
   const crawlerStats = dashboard.crawlerStats || emptyCrawlerStats;
 
+  const monitoringOverviewStats = {
+    totalAnalyses: crawlerStats.totalCrawlerResults || 0,
+    authenticCount: crawlerStats.authenticCount || 0,
+    suspiciousCount: crawlerStats.suspiciousCount || 0,
+    counterfeitCount: crawlerStats.counterfeitCount || 0,
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6 animate-[fadeInUp_.5s_ease]">
@@ -346,7 +393,7 @@ export default function DashboardPage() {
           <div className="mt-5 flex flex-wrap gap-3">
             <a href="#brand-monitoring" className={fx.btnSolid}>
               <ShieldCheck className="h-4 w-4 text-brand-700" />
-              Review crawler results
+              Review monitoring results
             </a>
 
             <a href="#violations" className={fx.btnOutline}>
@@ -360,29 +407,29 @@ export default function DashboardPage() {
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div className={fx.statCard}>
-            <p className="text-sm text-zinc-500">Total analyses</p>
+            <p className="text-sm text-zinc-500">Total monitored</p>
             <p className="mt-2 font-syne text-3xl font-bold text-white">
-              {dashboardLoading ? '—' : formatCompactNumber(stats.totalAnalyses)}
+              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.totalCrawlerResults)}
             </p>
           </div>
 
           <div className={fx.statCard}>
-            <p className="text-sm text-zinc-500">Authentic detections</p>
-            <p className="mt-2 font-syne text-3xl font-bold text-emerald-300">
-              {dashboardLoading ? '—' : formatCompactNumber(stats.authenticCount)}
+            <p className="text-sm text-zinc-500">Needs verification</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-cyan-200">
+              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.pendingAnalysisCount)}
             </p>
           </div>
 
           <div className={fx.statCard}>
-            <p className="text-sm text-zinc-500">Suspicious cases</p>
-            <p className="mt-2 font-syne text-3xl font-bold text-amber-300">
-              {dashboardLoading ? '—' : formatCompactNumber(stats.suspiciousCount)}
+            <p className="text-sm text-zinc-500">Counterfeit findings</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-rose-300">
+              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.counterfeitCount)}
             </p>
           </div>
 
           <div className={fx.statCard}>
             <p className="text-sm text-zinc-500">Reported violations</p>
-            <p className="mt-2 font-syne text-3xl font-bold text-rose-300">
+            <p className="mt-2 font-syne text-3xl font-bold text-amber-200">
               {dashboardLoading ? '—' : formatCompactNumber(stats.violationReports)}
             </p>
           </div>
@@ -390,16 +437,16 @@ export default function DashboardPage() {
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div className={fx.statCard}>
-            <p className="text-sm text-zinc-500">Crawler results</p>
-            <p className="mt-2 font-syne text-3xl font-bold text-cyan-200">
-              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.totalCrawlerResults)}
+            <p className="text-sm text-zinc-500">Authentic</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-emerald-300">
+              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.authenticCount)}
             </p>
           </div>
 
           <div className={fx.statCard}>
-            <p className="text-sm text-zinc-500">Pending analysis</p>
-            <p className="mt-2 font-syne text-3xl font-bold text-indigo-200">
-              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.pendingAnalysisCount)}
+            <p className="text-sm text-zinc-500">Suspicious</p>
+            <p className="mt-2 font-syne text-3xl font-bold text-yellow-300">
+              {dashboardLoading ? '—' : formatCompactNumber(crawlerStats.suspiciousCount)}
             </p>
           </div>
 
@@ -424,8 +471,8 @@ export default function DashboardPage() {
               <p className={fx.kicker}>Targeted monitoring</p>
               <h3 className={fx.titleMd}>Targeted Site Scan</h3>
               <p className={`mt-2 ${fx.body}`}>
-                Search for {companyDisplayName} products inside a specific website. The brand is selected automatically
-                from your company account.
+                Search Google Images for {companyDisplayName} products limited to a specific website. The brand is
+                selected automatically from your company account.
               </p>
             </div>
 
@@ -457,8 +504,8 @@ export default function DashboardPage() {
           </form>
 
           <p className="mt-3 text-xs text-zinc-500">
-            This runs Google Images crawler for the current company brand only. Results are stored through the backend
-            and will appear in Brand Monitoring Results.
+            Examples: shein.com, aliexpress.com, ebay.com. The crawler searches Google Images using a site filter and
+            stores results through the backend.
           </p>
 
           {scanStatus.success && <div className={`mt-4 ${fx.alertSuccess}`}>{scanStatus.success}</div>}
@@ -470,7 +517,8 @@ export default function DashboardPage() {
             <div>
               <h3 className="font-syne text-lg font-semibold text-white">Brand Monitoring Results</h3>
               <p className="mt-1 text-sm text-zinc-500">
-                Company-specific crawler findings from Instagram and Google Images.
+                Company-specific crawler findings from Instagram and Google Images. Use Verify to run logo detection
+                and similarity analysis.
               </p>
             </div>
             <span className="font-mono text-xs uppercase tracking-wider text-zinc-500">Crawler view</span>
@@ -484,11 +532,12 @@ export default function DashboardPage() {
               className={fieldClass}
             >
               <option value="">All statuses</option>
-              <option value="pending_analysis">Pending analysis</option>
-              <option value="pending_similarity">Pending similarity</option>
+              <option value="pending_analysis">Needs verification</option>
+              <option value="pending_similarity">Logo detected</option>
+              <option value="authentic">Authentic</option>
               <option value="suspicious">Suspicious</option>
               <option value="counterfeit">Counterfeit</option>
-              <option value="authentic">Authentic</option>
+              <option value="no_logo_detected">No logo detected</option>
             </select>
 
             <select
@@ -530,14 +579,23 @@ export default function DashboardPage() {
             </button>
           </div>
 
-          <CrawlerResultsTable items={crawlerResults} loading={crawlerLoading} error={crawlerError} />
+          {verifyStatus.success && <div className={`m-5 ${fx.alertSuccess}`}>{verifyStatus.success}</div>}
+          {verifyStatus.error && <div className={`m-5 ${fx.alertError}`}>{verifyStatus.error}</div>}
+
+          <CrawlerResultsTable
+            items={crawlerResults}
+            loading={crawlerLoading}
+            error={crawlerError}
+            onVerify={handleVerifyCrawlerResult}
+            verifyingId={verifyingId}
+          />
         </section>
 
         <section id="recent-analyses" className="grid gap-5 xl:grid-cols-[1.35fr_0.65fr]">
           <article className="overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.03] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-xl">
             <header className="flex items-center justify-between border-b border-white/[0.08] px-5 py-4">
-              <h3 className="font-syne text-lg font-semibold text-white">Recent logo analyses</h3>
-              <span className="font-mono text-xs uppercase tracking-wider text-zinc-500">Company view</span>
+              <h3 className="font-syne text-lg font-semibold text-white">Recent user logo analyses</h3>
+              <span className="font-mono text-xs uppercase tracking-wider text-zinc-500">User uploads</span>
             </header>
 
             {dashboardLoading ? (
@@ -548,7 +606,7 @@ export default function DashboardPage() {
           </article>
 
           <article className="space-y-5">
-            <AnalyticsOverview stats={stats} />
+            <AnalyticsOverview stats={monitoringOverviewStats} />
 
             <div className={`${fx.cardTight} border-dashed border-cyan-500/20 text-center`}>
               <Building2 className="mx-auto h-6 w-6 text-cyan-500/60" />

@@ -1,5 +1,5 @@
 import { env } from '../config/env';
-import { normalizeCrawlerResults, normalizeDashboard, normalizeCrawlerResult } from './adapters';
+import { normalizeCrawlerResult, normalizeCrawlerResults, normalizeDashboard } from './adapters';
 import { apiRequest } from './client';
 import { API_ENDPOINTS } from './endpoints';
 import * as mockApi from './mockApi';
@@ -47,6 +47,25 @@ export async function startCompanyGoogleScan(payload) {
   return apiRequest(API_ENDPOINTS.COMPANY_GOOGLE_SCAN, {
     method: 'POST',
     body: payload,
+  });
+}
+
+export async function verifyCrawlerResultLogo(id) {
+  if (env.useMockApi) {
+    return {
+      sourceImageId: id,
+      sourceType: 'crawler',
+      detected: true,
+      detections: [],
+      similarity: {
+        results: [],
+        errors: [],
+      },
+    };
+  }
+
+  return apiRequest(API_ENDPOINTS.DETECT_CRAWLER_LOGO(id), {
+    method: 'POST',
   });
 }
 
