@@ -34,12 +34,12 @@ import {
 const sources = [
   {
     title: 'Social media reports',
-    description: 'Track suspected counterfeit logos shared on social platforms.',
+    description: 'Track suspected counterfeit logos shared on Instagram.',
     icon: MessageCircleWarning,
   },
   {
     title: 'Website monitoring',
-    description: 'Review logos and products detected on commercial websites.',
+    description: 'Review products detected through Google Images site-filtered scans.',
     icon: Globe,
   },
   {
@@ -80,7 +80,6 @@ const emptyDashboard = {
 const crawlerDefaultFilters = {
   status: '',
   sourceType: '',
-  accountLabel: '',
   targetSite: '',
 };
 
@@ -524,7 +523,7 @@ export default function DashboardPage() {
             <span className="font-mono text-xs uppercase tracking-wider text-zinc-500">Crawler view</span>
           </header>
 
-          <div className="grid gap-3 border-b border-white/[0.08] px-5 py-4 sm:grid-cols-2 xl:grid-cols-5">
+          <div className="grid gap-3 border-b border-white/[0.08] px-5 py-4 sm:grid-cols-2 xl:grid-cols-4">
             <select
               name="status"
               value={crawlerFilters.status}
@@ -547,30 +546,15 @@ export default function DashboardPage() {
               className={fieldClass}
             >
               <option value="">All sources</option>
-              <option value="instagram">Instagram</option>
-              <option value="marketplace">Marketplace</option>
-              <option value="web">Web</option>
               <option value="google_images">Google Images</option>
-              <option value="social_media">Social Media</option>
-            </select>
-
-            <select
-              name="accountLabel"
-              value={crawlerFilters.accountLabel}
-              onChange={handleCrawlerFilterChange}
-              className={fieldClass}
-            >
-              <option value="">All account labels</option>
-              <option value="real">Real</option>
-              <option value="suspicious">Suspicious</option>
-              <option value="fake">Fake</option>
+              <option value="instagram">Instagram</option>
             </select>
 
             <input
               name="targetSite"
               value={crawlerFilters.targetSite}
               onChange={handleCrawlerFilterChange}
-              placeholder="Target site"
+              placeholder="Target site, e.g. shein.com"
               className={fieldClass}
             />
 
@@ -670,7 +654,7 @@ export default function DashboardPage() {
               <div>
                 <select {...register('source')} className={fieldClass}>
                   <option value="website">Website</option>
-                  <option value="social">Social Media</option>
+                  <option value="social">Instagram / Social Media</option>
                   <option value="marketplace">Marketplace</option>
                   <option value="other">Other</option>
                 </select>
